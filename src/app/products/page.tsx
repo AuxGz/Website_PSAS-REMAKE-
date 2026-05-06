@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
 import prisma from '@/lib/prisma'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default async function ProductsPage() {
   const cookieStore = await cookies()
@@ -27,8 +28,14 @@ export default async function ProductsPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-20 items-center justify-between">
             <Link href="/" className="group flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-black transition-transform group-hover:scale-110">
-                <span className="text-xl font-black">S</span>
+              <div className="flex items-center justify-center transition-transform group-hover:scale-110">
+                <Image
+                  src="/icons/icons-120x40.jpg"
+                  alt="Logo"
+                  width={120}
+                  height={40}
+                  className="object-contain"
+                />
               </div>
               <span className="text-xl font-bold tracking-tight">SUMMIT<span className="text-zinc-500">X</span>GEAR</span>
             </Link>
