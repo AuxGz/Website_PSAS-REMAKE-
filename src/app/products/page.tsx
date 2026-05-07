@@ -10,10 +10,8 @@ export const revalidate = 60;
 
 /**
  * KOMPONEN UNTUK AMBIL DATA PRODUK (DIPISAH AGAR BISA STREAMING)
- * Komponen ini yang melakukan query berat ke database.
  */
 async function ProductGrid({ selectedCategory }: { selectedCategory?: string }) {
-  // Ambil data produk
   const products = await prisma.product.findMany({
     where: { 
       isActive: true,
@@ -59,64 +57,6 @@ async function ProductGrid({ selectedCategory }: { selectedCategory?: string }) 
   );
 }
 
-/**
- * HALAMAN UTAMA (SHELL) - Dibuat instan tanpa await yang memblokir
- */
-export default async function ProductsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ category?: string }>
-}) {
-  const { category: selectedCategory } = await searchParams;
-
-  return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Navigation - Muncul Instan */}
-      <nav className="sticky top-0 z-50 border-b border-white/5 bg-background/50 backdrop-blur-xl">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between">
-            <Link href="/" className="group flex items-center justify-center transition-transform hover:scale-110">
-              <Image src="/icons/icons-120x40.jpg" alt="Logo" width={120} height={40} className="object-contain" />
-            </Link>
-            <div className="flex items-center gap-4">
-              <Link href="/login" className="text-sm font-medium hover:text-secondary">Enter</Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <main className="mx-auto max-w-7xl px-6 py-8 md:py-12">
-        {/* Header - Muncul Instan */}
-        <div className="mb-8 space-y-3">
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white">Our Collection</h1>
-          <p className="max-w-2xl text-zinc-400 font-light leading-relaxed">
-            Explore our curated selection of premium outdoor equipment.
-          </p>
-        </div>
-
-        {/* Categories & Products - Streaming menyusul belakangan */}
-        <Suspense fallback={<div className="h-10 w-full animate-pulse bg-white/5 rounded-full mb-10" />}>
-           <CategoryBar selectedCategory={selectedCategory} />
-        </Suspense>
-
-        <Suspense fallback={
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <div key={i} className="animate-pulse space-y-4">
-                <div className="aspect-[4/5] rounded-3xl bg-white/5" />
-                <div className="h-4 w-2/3 rounded bg-white/5" />
-                <div className="h-4 w-1/3 rounded bg-white/5" />
-              </div>
-            ))}
-          </div>
-        }>
-          <ProductGrid selectedCategory={selectedCategory} />
-        </Suspense>
-      </main>
-    </div>
-  );
-}
-
 // Komponen terpisah untuk Category Bar agar tidak memblokir TTFB
 async function CategoryBar({ selectedCategory }: { selectedCategory?: string }) {
   const categories = await prisma.category.findMany({ orderBy: { name: 'asc' } });
@@ -138,6 +78,66 @@ async function CategoryBar({ selectedCategory }: { selectedCategory?: string }) 
           {cat.name}
         </Link>
       ))}
+    </div>
+  );
+}
+
+// HALAMAN UTAMA (SHELL)
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>
+}) {
+  const { category: selectedCategory } = await searchParams;
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <nav className="sticky top-0 z-50 border-b border-white/5 bg-background/50 backdrop-blur-xl">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-20 items-center justify-between">
+            <Link href="/" className="group flex items-center justify-center transition-transform hover:scale-110">
+              <Image src="/icons/icons-120x40.jpg" alt="Logo" width={120} height={40} className="object-contain" />
+            </Link>
+            <div className="flex items-center gap-4">
+              <Link href="/login" className="text-sm font-medium hover:text-secondary">Enter</Link>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <main className="mx-auto max-w-7xl px-6 py-8 md:py-12">
+        <div className="mb-8 space-y-3">
+          <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white">Our Collection</h1>
+          <p className="max-w-2xl text-zinc-400 font-light leading-relaxed">
+            Explore our curated selection of premium outdoor equipment.
+          </p>
+        </div>
+
+        {/* Categories & Products - Menggunakan KEY agar responsif saat diklik cepat */}
+        <Suspense 
+          key={`categories-${selectedCategory}`}
+          fallback={<div className="h-10 w-full animate-pulse bg-white/5 rounded-full mb-10" />}
+        >
+           <CategoryBar selectedCategory={selectedCategory} />
+        </Suspense>
+
+        <Suspense 
+          key={`products-${selectedCategory}`}
+          fallback={
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                <div key={i} className="animate-pulse space-y-4">
+                  <div className="aspect-[4/5] rounded-3xl bg-white/5" />
+                  <div className="h-4 w-2/3 rounded bg-white/5" />
+                  <div className="h-4 w-1/3 rounded bg-white/5" />
+                </div>
+              ))}
+            </div>
+          }
+        >
+          <ProductGrid selectedCategory={selectedCategory} />
+        </Suspense>
+      </main>
     </div>
   );
 }
