@@ -20,7 +20,7 @@ export async function login(formData: FormData) {
     return redirect(`/login?error=${encodeURIComponent(error.message)}`)
   }
 
-  return redirect('/')
+  return redirect('/products')
 }
 
 export async function signup(formData: FormData) {

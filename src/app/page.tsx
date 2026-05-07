@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
+import Image from 'next/image'
 import prisma from '@/lib/prisma'
 
 export default async function Home() {
@@ -11,86 +12,101 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // SINKRONISASI OTOMATIS: 
-  // Kalau user login (dari Email, Google, dsb), pastikan datanya masuk ke tabel Prisma 'profiles'
-  if (user) {
-    await prisma.profile.upsert({
-      where: { userId: user.id },
-      update: {
-        email: user.email,
-        fullName: user.user_metadata?.full_name || user.user_metadata?.name || null,
-        avatarUrl: user.user_metadata?.avatar_url || null,
-      },
-      create: {
-        userId: user.id,
-        email: user.email,
-        fullName: user.user_metadata?.full_name || user.user_metadata?.name || null,
-        avatarUrl: user.user_metadata?.avatar_url || null,
-      },
-    })
-  }
-
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#0a0a0a] text-white px-4 font-sans selection:bg-zinc-500">
-      {/* Background Decor */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[20%] right-[10%] h-[40%] w-[40%] rounded-full bg-blue-900/10 blur-[120px]" />
-        <div className="absolute bottom-[20%] left-[10%] h-[40%] w-[40%] rounded-full bg-indigo-900/10 blur-[120px]" />
+    <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-secondary/30">
+      {/* BACKGROUND CINEMATIC VIDEO */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background z-10" />
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover opacity-60 scale-105"
+        >
+          <source src="/videos/LPage-main.mp4" type="video/mp4" />
+        </video>
       </div>
 
-      <main className="relative z-10 flex flex-col items-center gap-8 text-center max-w-2xl">
-        <div className="space-y-4">
-          <h1 className="text-5xl font-bold tracking-tight sm:text-7xl">
-            SummitX<span className="text-zinc-500">Gear</span>
+      {/* MINIMALIST TOP NAV */}
+      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-8 md:px-12 backdrop-blur-sm bg-background/5">
+        <Link href="/">
+          <Image 
+            src="/icons/icons-120x40.jpg" 
+            alt="SummitXGear" 
+            width={120} 
+            height={40} 
+            className="brightness-0 invert opacity-80"
+          />
+        </Link>
+        <div className="hidden md:flex gap-12 text-[10px] tracking-[0.3em] uppercase font-light text-zinc-400">
+          <Link href="#ready" className="hover:text-white transition-colors">Experience</Link>
+        </div>
+        <Link href="/login" className="text-[10px] tracking-[0.2em] uppercase font-medium border border-white/20 px-6 py-2 rounded-full hover:bg-white hover:text-black transition-all duration-500">
+          {user ? 'Account' : 'Enter'}
+        </Link>
+      </nav>
+
+      {/* 1. HERO SECTION */}
+      <section className="relative z-20 flex flex-col items-center justify-end min-h-screen px-6 pb-24 md:pb-32 text-center">
+        <div className="max-w-5xl space-y-8 animate-in fade-in slide-in-from-bottom-12 duration-1000">
+          <h2 className="text-[9px] md:text-[10px] tracking-[0.4em] md:tracking-[0.5em] uppercase text-secondary font-bold">Inspiring Exploration</h2>
+          <h1 className="text-5xl sm:text-7xl md:text-9xl font-light tracking-tighter leading-[0.9] italic">
+            Peak of <span className="font-serif">Excellence.</span>
           </h1>
-          <p className="text-xl text-zinc-400">
-            Premium outdoor equipment for your next adventure.
+          <p className="max-w-md mx-auto text-sm md:text-lg text-zinc-400 font-light leading-relaxed tracking-wide px-4">
+            Defined by endurance. Crafted for the extraordinary. SummitXGear is the pinnacle of outdoor luxury.
           </p>
         </div>
+        {/* SCROLL INDICATOR */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-30">
+          <div className="w-[1px] h-12 md:h-16 bg-gradient-to-b from-white to-transparent animate-pulse" />
+        </div>
+      </section>
 
-        {user ? (
-          <div className="space-y-6">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
-              <p className="text-zinc-300">Welcome back,</p>
-              <p className="text-xl font-semibold text-white mt-1">{user.email}</p>
-            </div>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link
-                href="/products"
-                className="inline-flex h-12 items-center justify-center rounded-xl bg-white px-8 text-sm font-bold text-black transition-all hover:bg-zinc-200 active:scale-[0.98]"
-              >
-                Browse Catalog
-              </Link>
-              <form action="/auth/signout" method="post">
-                <button
-                  type="submit"
-                  className="inline-flex h-12 items-center justify-center rounded-xl border border-white/10 bg-transparent px-8 text-sm font-bold text-white transition-all hover:bg-white/5 active:scale-[0.98]"
-                >
-                  Sign Out
-                </button>
-              </form>
-            </div>
+      {/* 2. CRAFTSMANSHIP SECTION */}
+      <section id="craft" className="relative z-20 min-h-screen flex items-center bg-background py-24 md:py-32 px-6 md:px-24">
+        <div className="grid lg:grid-cols-2 gap-16 md:gap-24 items-center max-w-7xl mx-auto">
+          <div className="space-y-8 md:space-y-10 order-2 lg:order-1">
+            <h3 className="text-[9px] md:text-[10px] tracking-[0.4em] uppercase text-secondary font-bold">The Art of Detail</h3>
+            <h2 className="text-3xl md:text-6xl font-light leading-tight">Mastery in Every <span className="font-serif italic">Stitch.</span></h2>
+            <p className="text-zinc-400 font-light leading-relaxed text-base md:text-lg">
+              Every piece of SummitXGear equipment undergoes rigorous testing in the world's most unforgiving climates. We don't just build gear; we engineer legacies.
+            </p>
           </div>
-        ) : (
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="relative aspect-square md:aspect-[4/5] bg-primary/20 rounded-[2rem] md:rounded-[3rem] overflow-hidden order-1 lg:order-2 border border-white/5">
+             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&q=80')] bg-cover bg-center grayscale hover:grayscale-0 transition-all duration-1000 scale-105" />
+          </div>
+        </div>
+      </section>
+
+      {/* 3. READY TO BUY / CTA SECTION */}
+      <section id="ready" className="relative z-20 min-h-screen flex flex-col items-center justify-center text-center px-6 bg-black">
+        <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1533240332313-0db36245e452?auto=format&fit=crop&q=80')] bg-cover bg-fixed bg-center" />
+        <div className="relative z-10 max-w-4xl space-y-10 md:space-y-12">
+          <h2 className="text-4xl sm:text-6xl md:text-8xl font-light tracking-tighter italic leading-tight">Your Next <span className="font-serif">Chapter</span> Awaits.</h2>
+          <p className="text-zinc-500 font-light tracking-[0.2em] uppercase text-[10px] md:text-xs">Are you prepared for the extraordinary?</p>
+          
+          <div className="pt-6 md:pt-10">
             <Link
               href="/login"
-              className="inline-flex h-12 items-center justify-center rounded-xl bg-white px-8 text-sm font-bold text-black transition-all hover:bg-zinc-200 active:scale-[0.98]"
+              className="group relative inline-flex px-10 md:px-16 py-4 md:py-6 overflow-hidden rounded-full bg-white text-black text-[10px] md:text-sm font-black tracking-[0.3em] uppercase transition-all hover:scale-105 active:scale-95"
             >
-              Get Started
-            </Link>
-            <Link
-              href="/login"
-              className="inline-flex h-12 items-center justify-center rounded-xl border border-white/10 bg-transparent px-8 text-sm font-bold text-white transition-all hover:bg-white/5 active:scale-[0.98]"
-            >
-              View Products
+              <span className="relative z-10">Ready to Buy?</span>
+              <div className="absolute inset-0 bg-secondary translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
             </Link>
           </div>
-        )}
-      </main>
+        </div>
+      </section>
 
-      <footer className="absolute bottom-8 text-zinc-600 text-sm">
-        © 2026 SummitXGear. All rights reserved.
+      {/* FOOTER STRIP */}
+      <footer className="relative z-20 flex flex-col md:flex-row justify-between items-center gap-6 px-12 py-12 text-[9px] tracking-[0.2em] uppercase text-zinc-600 border-t border-white/5 bg-black">
+        <div>© 2026 SummitXGear — The Pinnacle of Luxury</div>
+        <div className="flex gap-12">
+          <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+          <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+          <a href="#" className="hover:text-white transition-colors">Contact</a>
+        </div>
       </footer>
     </div>
   )

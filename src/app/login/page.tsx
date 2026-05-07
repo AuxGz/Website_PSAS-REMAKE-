@@ -1,50 +1,55 @@
 import { login, signup, signInWithOAuth } from './actions'
 import { SubmitButton } from './submit-button'
+import { cookies } from 'next/headers'
+import { createClient } from '@/utils/supabase/server'
+import { redirect } from 'next/navigation'
+import Link from 'next/link'
 
 export default async function LoginPage({
   searchParams,
 }: {
   searchParams: Promise<{ message: string; error: string }>
 }) {
+  const cookieStore = await cookies()
+  const supabase = createClient(cookieStore)
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (user) {
+    return redirect('/products')
+  }
+
   const { message, error } = await searchParams;
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-[#0a0a0a] px-4 font-sans selection:bg-zinc-500 selection:text-white">
+    <div className="flex min-h-screen w-full items-center justify-center bg-background px-4 font-sans selection:bg-secondary/30 selection:text-white">
       {/* Background Decor */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[10%] -left-[10%] h-[40%] w-[40%] rounded-full bg-blue-900/20 blur-[120px]" />
-        <div className="absolute -bottom-[10%] -right-[10%] h-[40%] w-[40%] rounded-full bg-indigo-900/20 blur-[120px]" />
+        <div className="absolute -top-[10%] -left-[10%] h-[40%] w-[40%] rounded-full bg-secondary/10 blur-[120px]" />
+        <div className="absolute -bottom-[10%] -right-[10%] h-[40%] w-[40%] rounded-full bg-accent/10 blur-[120px]" />
       </div>
 
       <div className="relative z-10 w-full max-w-md space-y-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            SummitX<span className="text-zinc-500">Gear</span>
+          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            SUMMIT<span className="text-secondary">X</span>GEAR
           </h1>
-          <p className="mt-3 text-zinc-400">Sign in to your account to continue</p>
+          <p className="mt-3 text-zinc-400">Premium Outdoor Equipment</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
+        <div className="rounded-3xl border border-white/5 bg-primary/40 p-8 shadow-2xl backdrop-blur-xl">
           <form className="space-y-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium leading-none text-zinc-300" htmlFor="email">
-                Email Address
-              </label>
+              <label className="text-sm font-medium text-zinc-300" htmlFor="email">Email</label>
               <input
                 id="email"
                 name="email"
                 type="email"
-                placeholder="name@example.com"
                 required
-                className="flex h-12 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white transition-all placeholder:text-zinc-600 focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500"
+                className="w-full rounded-xl border border-white/10 bg-background/50 px-4 py-3 text-white placeholder-zinc-500 transition-all focus:border-secondary/50 focus:outline-none focus:ring-1 focus:ring-secondary/50"
+                placeholder="you@example.com"
               />
             </div>
-
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium leading-none text-zinc-300" htmlFor="password">
-                  Password
-                </label>
-              </div>
+              <label className="text-sm font-medium text-zinc-300" htmlFor="password">Password</label>
               <input
                 id="password"
                 name="password"
@@ -90,7 +95,7 @@ export default async function LoginPage({
               <span className="w-full border-t border-white/10"></span>
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-[#121212] px-2 text-zinc-500">Or continue with</span>
+              <span className="bg-primary px-2 text-zinc-500">Or continue with</span>
             </div>
           </div>
 
