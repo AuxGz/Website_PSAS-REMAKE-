@@ -24,7 +24,7 @@ export default function HeroVideo() {
       preload="auto"
       className="w-full h-full object-cover opacity-60 scale-105"
     >
-      <source src="/videos/lpage-main.mp4" type="video/mp4" />
+      <source src="/hero-background.mp4" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
   );

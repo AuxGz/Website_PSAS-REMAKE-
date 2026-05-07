@@ -4,7 +4,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import prisma from '@/lib/prisma'
 
+import { Suspense } from 'react'
 import HeroVideo from '@/components/HeroVideo'
+import UserNav from '@/components/UserNav'
 
 export default async function Home() {
   // KUNCI: Kita tidak lagi 'await' getUser di sini karena itu akan memblokir TTFB selama 7 detik.
@@ -34,10 +36,12 @@ export default async function Home() {
           <Link href="/products" className="hover:text-white transition-colors">Collection</Link>
         </div>
         
-        {/* Tombol Login - Kita ganti jadi link Enter biasa agar TTFB instan */}
-        <Link href="/login" className="text-[10px] tracking-[0.2em] uppercase font-medium border border-white/20 px-6 py-2 rounded-full hover:bg-white hover:text-black transition-all duration-500">
-          Enter
-        </Link>
+        {/* Tombol Login/Profile - Dibungkus Suspense agar tidak memblokir TTFB */}
+        <Suspense fallback={
+          <div className="w-24 h-8 animate-pulse bg-white/10 rounded-full" />
+        }>
+          <UserNav />
+        </Suspense>
       </nav>
 
       {/* 1. HERO SECTION */}

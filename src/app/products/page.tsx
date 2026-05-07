@@ -82,6 +82,8 @@ async function CategoryBar({ selectedCategory }: { selectedCategory?: string }) 
   );
 }
 
+import UserNav from '@/components/UserNav'
+
 // HALAMAN UTAMA (SHELL)
 export default async function ProductsPage({
   searchParams,
@@ -99,7 +101,9 @@ export default async function ProductsPage({
               <Image src="/icons/icons-120x40.jpg" alt="Logo" width={120} height={40} className="object-contain" />
             </Link>
             <div className="flex items-center gap-4">
-              <Link href="/login" className="text-sm font-medium hover:text-secondary">Enter</Link>
+              <Suspense fallback={<div className="h-8 w-20 animate-pulse bg-white/5 rounded-full" />}>
+                <UserNav />
+              </Suspense>
             </div>
           </div>
         </div>
