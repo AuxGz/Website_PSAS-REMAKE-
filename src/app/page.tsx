@@ -22,9 +22,11 @@ export default async function Home() {
           loop
           muted
           playsInline
+          preload="auto"
           className="w-full h-full object-cover opacity-60 scale-105"
         >
           <source src="/videos/LPage-main.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
         </video>
       </div>
 

@@ -5,22 +5,23 @@ export async function proxy(request: NextRequest) {
   // Update session dan dapatkan response awal
   const { supabase, supabaseResponse } = updateSession(request);
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   const { pathname } = request.nextUrl;
 
-  // Proteksi: Hanya /products, /admin, dan /profile yang butuh login
+  // Proteksi: Hanya rute ini yang butuh pengecekan login
   const isProtectedRoute = 
     pathname.startsWith('/products') || 
     pathname.startsWith('/admin') ||
     pathname.startsWith('/profile');
 
-  if (isProtectedRoute && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+  // Hanya panggil getUser JIKA rutenya memang butuh login
+  if (isProtectedRoute) {
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
+    }
   }
 
   return supabaseResponse;
