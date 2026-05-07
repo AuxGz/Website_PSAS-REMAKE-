@@ -60,8 +60,7 @@ async function ProductGrid({ selectedCategory }: { selectedCategory?: string }) 
 }
 
 /**
- * HALAMAN UTAMA (SHELL)
- * Halaman ini mengirimkan Navbar & Header secepat mungkin.
+ * HALAMAN UTAMA (SHELL) - Dibuat instan tanpa await yang memblokir
  */
 export default async function ProductsPage({
   searchParams,
@@ -69,16 +68,6 @@ export default async function ProductsPage({
   searchParams: Promise<{ category?: string }>
 }) {
   const { category: selectedCategory } = await searchParams;
-  const cookieStore = await cookies()
-  const supabase = createClient(cookieStore)
-
-  // Ambil data yang "ringan" dulu secara paralel
-  const [authUserResponse, categories] = await Promise.all([
-    supabase.auth.getUser(),
-    prisma.category.findMany({ orderBy: { name: 'asc' } })
-  ]);
-
-  const user = authUserResponse.data.user;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -90,11 +79,7 @@ export default async function ProductsPage({
               <Image src="/icons/icons-120x40.jpg" alt="Logo" width={120} height={40} className="object-contain" />
             </Link>
             <div className="flex items-center gap-4">
-              {user ? (
-                <Link href="/profile" className="h-8 w-8 rounded-full bg-gradient-to-tr from-secondary to-accent border border-white/10" />
-              ) : (
-                <Link href="/login" className="text-sm font-medium hover:text-secondary">Login</Link>
-              )}
+              <Link href="/login" className="text-sm font-medium hover:text-secondary">Enter</Link>
             </div>
           </div>
         </div>
@@ -109,26 +94,11 @@ export default async function ProductsPage({
           </p>
         </div>
 
-        {/* Categories Bar - Muncul Instan */}
-        <div className="mb-10 flex gap-3 overflow-x-auto pb-4 no-scrollbar">
-          <Link 
-            href="/products" 
-            className={`rounded-full px-6 py-2.5 text-sm font-medium transition-all ${!selectedCategory ? 'bg-secondary text-white' : 'border border-white/10 bg-primary/30'}`}
-          >
-            All Gear
-          </Link>
-          {categories.map((cat) => (
-            <Link 
-              key={cat.id} 
-              href={`/products?category=${cat.slug}`} 
-              className={`rounded-full px-6 py-2.5 text-sm font-medium transition-all ${selectedCategory === cat.slug ? 'bg-secondary text-white' : 'border border-white/10 bg-primary/30'}`}
-            >
-              {cat.name}
-            </Link>
-          ))}
-        </div>
+        {/* Categories & Products - Streaming menyusul belakangan */}
+        <Suspense fallback={<div className="h-10 w-full animate-pulse bg-white/5 rounded-full mb-10" />}>
+           <CategoryBar selectedCategory={selectedCategory} />
+        </Suspense>
 
-        {/* PRODUCT GRID - DIBUNGKUS SUSPENSE (SOLUSI TTFB CEPAT) */}
         <Suspense fallback={
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
@@ -143,6 +113,31 @@ export default async function ProductsPage({
           <ProductGrid selectedCategory={selectedCategory} />
         </Suspense>
       </main>
+    </div>
+  );
+}
+
+// Komponen terpisah untuk Category Bar agar tidak memblokir TTFB
+async function CategoryBar({ selectedCategory }: { selectedCategory?: string }) {
+  const categories = await prisma.category.findMany({ orderBy: { name: 'asc' } });
+  
+  return (
+    <div className="mb-10 flex gap-3 overflow-x-auto pb-4 no-scrollbar">
+      <Link 
+        href="/products" 
+        className={`rounded-full px-6 py-2.5 text-sm font-medium transition-all ${!selectedCategory ? 'bg-secondary text-white' : 'border border-white/10 bg-primary/30'}`}
+      >
+        All Gear
+      </Link>
+      {categories.map((cat) => (
+        <Link 
+          key={cat.id} 
+          href={`/products?category=${cat.slug}`} 
+          className={`rounded-full px-6 py-2.5 text-sm font-medium transition-all ${selectedCategory === cat.slug ? 'bg-secondary text-white' : 'border border-white/10 bg-primary/30'}`}
+        >
+          {cat.name}
+        </Link>
+      ))}
     </div>
   );
 }

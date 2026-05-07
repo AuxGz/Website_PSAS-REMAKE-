@@ -4,30 +4,18 @@ import Link from 'next/link'
 import Image from 'next/image'
 import prisma from '@/lib/prisma'
 
-export default async function Home() {
-  const cookieStore = await cookies()
-  const supabase = createClient(cookieStore)
+import HeroVideo from '@/components/HeroVideo'
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+export default async function Home() {
+  // KUNCI: Kita tidak lagi 'await' getUser di sini karena itu akan memblokir TTFB selama 7 detik.
+  // Navbar dan Video akan langsung dikirim ke browser.
 
   return (
     <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-secondary/30">
-      {/* BACKGROUND CINEMATIC VIDEO */}
+      {/* BACKGROUND CINEMATIC VIDEO - Muncul Instan */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background z-10" />
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="w-full h-full object-cover opacity-60 scale-105"
-        >
-          <source src="/videos/LPage-main.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <HeroVideo />
       </div>
 
       {/* MINIMALIST TOP NAV */}
@@ -43,9 +31,12 @@ export default async function Home() {
         </Link>
         <div className="hidden md:flex gap-12 text-[10px] tracking-[0.3em] uppercase font-light text-zinc-400">
           <Link href="#ready" className="hover:text-white transition-colors">Experience</Link>
+          <Link href="/products" className="hover:text-white transition-colors">Collection</Link>
         </div>
+        
+        {/* Tombol Login - Kita ganti jadi link Enter biasa agar TTFB instan */}
         <Link href="/login" className="text-[10px] tracking-[0.2em] uppercase font-medium border border-white/20 px-6 py-2 rounded-full hover:bg-white hover:text-black transition-all duration-500">
-          {user ? 'Account' : 'Enter'}
+          Enter
         </Link>
       </nav>
 

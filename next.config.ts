@@ -4,7 +4,7 @@ import withPWAInit from "@ducanh2912/next-pwa";
 const withPWA = withPWAInit({
   dest: "public",
   disable: process.env.NODE_ENV === "development",
-  publicExcludes: ["!videos/**/*"], // Jangan simpan video di cache PWA
+  publicExcludes: ["videos/**/*"], // Hapus tanda seru agar benar-benar di-exclude
 });
 
 const nextConfig: NextConfig = {
