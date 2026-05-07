@@ -31,11 +31,11 @@ export default async function Home() {
       {/* MINIMALIST TOP NAV */}
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-8 md:px-12 backdrop-blur-sm bg-background/5">
         <Link href="/">
-          <Image 
-            src="/icons/icons-120x40.jpg" 
-            alt="SummitXGear" 
-            width={120} 
-            height={40} 
+          <Image
+            src="/icons/icons-120x40.jpg"
+            alt="SummitXGear"
+            width={120}
+            height={40}
             className="brightness-0 invert opacity-80"
           />
         </Link>
@@ -75,7 +75,7 @@ export default async function Home() {
             </p>
           </div>
           <div className="relative aspect-square md:aspect-[4/5] bg-primary/20 rounded-[2rem] md:rounded-[3rem] overflow-hidden order-1 lg:order-2 border border-white/5">
-             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&q=80')] bg-cover bg-center grayscale hover:grayscale-0 transition-all duration-1000 scale-105" />
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&q=80')] bg-cover bg-center grayscale hover:grayscale-0 transition-all duration-1000 scale-105" />
           </div>
         </div>
       </section>
@@ -86,7 +86,7 @@ export default async function Home() {
         <div className="relative z-10 max-w-4xl space-y-10 md:space-y-12">
           <h2 className="text-4xl sm:text-6xl md:text-8xl font-light tracking-tighter italic leading-tight">Your Next <span className="font-serif">Chapter</span> Awaits.</h2>
           <p className="text-zinc-500 font-light tracking-[0.2em] uppercase text-[10px] md:text-xs">Are you prepared for the extraordinary?</p>
-          
+
           <div className="pt-6 md:pt-10">
             <Link
               href="/login"
