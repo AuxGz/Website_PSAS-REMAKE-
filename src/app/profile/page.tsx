@@ -74,8 +74,10 @@ export default async function ProfilePage() {
               <p className="text-4xl font-light italic">0</p>
             </Card>
             <Card className="flex flex-col justify-center space-y-2">
-              <h3 className="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold">Wishlist Items</h3>
-              <p className="text-4xl font-light italic text-accent">0</p>
+              <h3 className="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold">Cart Items</h3>
+              <p className="text-4xl font-light italic text-secondary">
+                {await prisma.cartItem.count({ where: { profileId: profile?.id } })}
+              </p>
             </Card>
           </div>
         </div>

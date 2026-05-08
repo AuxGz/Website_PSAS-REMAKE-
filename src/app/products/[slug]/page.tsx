@@ -3,6 +3,9 @@ import { createClient } from '@/utils/supabase/server'
 import prisma from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import AddToCartButton from '@/components/AddToCartButton'
+import UserNav from '@/components/UserNav'
+import { Suspense } from 'react'
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -30,7 +33,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             </svg>
             Back to Catalog
           </Link>
-          <div className="text-sm font-bold tracking-widest opacity-50 uppercase text-accent">{product.category.name}</div>
+          <div className="flex items-center gap-6">
+            <div className="hidden md:block text-sm font-bold tracking-widest opacity-50 uppercase text-accent">{product.category.name}</div>
+            <Suspense fallback={<div className="h-8 w-20 animate-pulse bg-white/5 rounded-full" />}>
+              <UserNav />
+            </Suspense>
+          </div>
         </div>
       </nav>
 
@@ -79,15 +87,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               {product.description}
             </p>
 
-            {/* Action Buttons */}
-            <div className="grid gap-4 sm:grid-cols-2 mb-12">
-              <button className="flex h-16 items-center justify-center rounded-2xl bg-secondary text-lg font-bold text-white hover:bg-secondary/80 shadow-lg shadow-secondary/20 transition-all active:scale-[0.98]">
-                Add to Cart
-              </button>
-              <button className="flex h-16 items-center justify-center rounded-2xl border border-white/10 bg-primary/30 text-lg font-bold hover:bg-primary/50 transition-all active:scale-[0.98]">
-                Add to Wishlist
-              </button>
+            <div className="flex flex-col gap-4 mb-12 max-w-sm">
+              <AddToCartButton productId={product.id} variant="full" />
             </div>
+
 
             {/* Specs Table */}
             <div className="rounded-3xl border border-white/5 bg-primary/20 p-8">
