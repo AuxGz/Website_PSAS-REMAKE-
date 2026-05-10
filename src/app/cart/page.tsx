@@ -36,8 +36,16 @@ export default async function CartPage() {
     }
   })
 
-  const cartItems = profile?.cartItems || []
-  const subtotal = cartItems.reduce((acc, item) => acc + (Number(item.product.price) * item.quantity), 0)
+  const cartItems = profile?.cartItems.map(item => ({
+    ...item,
+    product: {
+      ...item.product,
+      price: Number(item.product.price),
+      salePrice: item.product.salePrice ? Number(item.product.salePrice) : null
+    }
+  })) || []
+
+  const subtotal = cartItems.reduce((acc, item) => acc + (item.product.price * item.quantity), 0)
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-secondary/30">
@@ -101,12 +109,7 @@ export default async function CartPage() {
         ) : (
           <div className="grid lg:grid-cols-3 gap-12">
             {/* List Items */}
-            <div className="lg:col-span-2 space-y-2">
-              <div className="hidden md:grid grid-cols-[1fr,auto,auto] gap-6 px-6 py-4 text-[10px] tracking-[0.3em] uppercase text-zinc-600 border-b border-white/5">
-                <span>Product</span>
-                <span className="w-32 text-center">Quantity</span>
-                <span className="w-[120px] text-right">Total</span>
-              </div>
+            <div className="lg:col-span-2 space-y-4">
               {cartItems.map((item: any) => (
                 <CartItemRow key={item.id} item={item} />
               ))}
@@ -132,9 +135,12 @@ export default async function CartPage() {
                   </div>
                 </div>
 
-                <button className="w-full h-16 rounded-2xl bg-secondary text-white text-[10px] tracking-[0.3em] uppercase font-bold hover:bg-secondary/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 shadow-2xl shadow-secondary/20">
+                <Link 
+                  href="/checkout"
+                  className="w-full h-16 flex items-center justify-center rounded-2xl bg-secondary text-white text-[10px] tracking-[0.3em] uppercase font-bold hover:bg-secondary/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 shadow-2xl shadow-secondary/20"
+                >
                   Proceed to Checkout
-                </button>
+                </Link>
 
                 <Link 
                   href="/products" 

@@ -8,13 +8,15 @@ export default async function UserNav() {
   const supabase = createClient(cookieStore);
   const { data: { user } } = await supabase.auth.getUser();
 
+  let isAdmin = false;
   let cartCount = 0;
   if (user) {
     const profile = await prisma.profile.findUnique({
       where: { userId: user.id },
-      select: { id: true }
+      select: { id: true, role: true }
     });
     if (profile) {
+      isAdmin = profile.role === 'ADMIN';
       cartCount = await prisma.cartItem.count({
         where: { profileId: profile.id }
       });
@@ -52,6 +54,14 @@ export default async function UserNav() {
   return (
     <div className="flex items-center gap-4">
       <CartIcon />
+      {isAdmin && (
+        <Link 
+          href="/admin" 
+          className="text-[10px] tracking-[0.2em] uppercase font-medium border border-accent/20 px-4 py-2 rounded-full text-accent hover:bg-accent hover:text-black transition-all duration-500"
+        >
+          Admin
+        </Link>
+      )}
       {user ? (
         <Link 
           href="/profile" 

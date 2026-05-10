@@ -100,12 +100,21 @@ model Address {
   profileId  String  @db.Uuid @map("profile_id")
   label      String? // e.g., "Rumah", "Kantor"
   fullName   String  @map("full_name")
+  country    String  @default("Indonesia")
   phone      String
   street     String
   city       String
+  cityId     String? @map("city_id")
+  subdistrict String?
+  subdistrictId String? @map("subdistrict_id")
   province   String
+  provinceId String? @map("province_id")
   postalCode String  @map("postal_code")
   isDefault  Boolean @default(false) @map("is_default")
+  latitude   Float?
+  longitude  Float?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
   profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
   orders  Order[]
