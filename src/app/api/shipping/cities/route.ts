@@ -19,17 +19,21 @@ export async function GET(request: NextRequest) {
       : `${baseUrl}/city`
 
     const response = await fetch(url, {
-      headers: { key: apiKey }
+      headers: { 'key': apiKey }
     })
 
-    const data = await response.json()
-
-    if (data.rajaongkir.status.code !== 200) {
-      return NextResponse.json({ error: data.rajaongkir.status.description }, { status: 400 })
+    if (!response.ok) {
+      const errorText = await response.text()
+      return NextResponse.json({ error: `RajaOngkir Response Error: ${response.status} - ${errorText}` }, { status: response.status })
     }
 
+    const data = await response.json()
     return NextResponse.json(data.rajaongkir.results)
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('CITY_API_ERROR:', error)
+    return NextResponse.json({ 
+      error: `Fetch Failed: ${error.message}`,
+      details: error.cause ? String(error.cause) : 'No extra details'
+    }, { status: 500 })
   }
 }
