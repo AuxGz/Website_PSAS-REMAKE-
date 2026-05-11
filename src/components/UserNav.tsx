@@ -63,12 +63,20 @@ export default async function UserNav() {
         </Link>
       )}
       {user ? (
-        <Link 
-          href="/profile" 
-          className="text-[10px] tracking-[0.2em] uppercase font-medium border border-secondary px-6 py-2 rounded-full bg-secondary/10 text-secondary hover:bg-secondary hover:text-white transition-all duration-500"
-        >
-          Account
-        </Link>
+        <>
+          <Link 
+            href="/orders" 
+            className="text-[10px] tracking-[0.2em] uppercase font-medium border border-white/10 px-5 py-2 rounded-full text-zinc-400 hover:text-white hover:border-white/30 transition-all duration-500"
+          >
+            Orders
+          </Link>
+          <Link 
+            href="/profile" 
+            className="text-[10px] tracking-[0.2em] uppercase font-medium border border-secondary px-6 py-2 rounded-full bg-secondary/10 text-secondary hover:bg-secondary hover:text-white transition-all duration-500"
+          >
+            Account
+          </Link>
+        </>
       ) : (
         <Link 
           href="/login" 

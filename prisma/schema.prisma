@@ -24,7 +24,6 @@ model Profile {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  addresses Address[]
   orders    Order[]
   cartItems CartItem[]
 
@@ -95,32 +94,6 @@ enum ImageType {
 
 // ─── SHOPPING ───
 
-model Address {
-  id         String  @id @default(uuid()) @db.Uuid
-  profileId  String  @db.Uuid @map("profile_id")
-  label      String? // e.g., "Rumah", "Kantor"
-  fullName   String  @map("full_name")
-  country    String  @default("Indonesia")
-  phone      String
-  street     String
-  city       String
-  cityId     String? @map("city_id")
-  subdistrict String?
-  subdistrictId String? @map("subdistrict_id")
-  province   String
-  provinceId String? @map("province_id")
-  postalCode String  @map("postal_code")
-  isDefault  Boolean @default(false) @map("is_default")
-  latitude   Float?
-  longitude  Float?
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  orders  Order[]
-
-  @@map("addresses")
-}
 
 model CartItem {
   id        String   @id @default(uuid()) @db.Uuid
@@ -141,10 +114,8 @@ model CartItem {
 model Order {
   id              String      @id @default(uuid()) @db.Uuid
   profileId       String      @db.Uuid @map("profile_id")
-  addressId       String      @db.Uuid @map("address_id")
   status          OrderStatus @default(PENDING)
   totalAmount     Decimal     @db.Decimal(12, 2) @map("total_amount")
-  shippingCost    Decimal     @default(0) @db.Decimal(12, 2) @map("shipping_cost")
   midtransOrderId String?     @unique @map("midtrans_order_id")
   midtransToken   String?     @map("midtrans_token")
   paymentMethod   String?     @map("payment_method")
@@ -153,7 +124,6 @@ model Order {
   updatedAt       DateTime    @updatedAt @map("updated_at")
 
   profile    Profile     @relation(fields: [profileId], references: [id])
-  address    Address     @relation(fields: [addressId], references: [id])
   orderItems OrderItem[]
 
   @@map("orders")
@@ -163,8 +133,6 @@ enum OrderStatus {
   PENDING    // Menunggu pembayaran
   PAID       // Sudah bayar
   PROCESSING // Sedang diproses
-  SHIPPED    // Sedang dikirim
-  DELIVERED  // Sudah sampai
   CANCELLED  // Dibatalkan
 }
 

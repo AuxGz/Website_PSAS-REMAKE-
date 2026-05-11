@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import Card from '@/components/ui/Card'
 import { revalidatePath } from 'next/cache'
+import StatusActions from './StatusActions'
 
 export default async function AdminOrdersPage() {
   const cookieStore = await cookies()
@@ -20,7 +21,7 @@ export default async function AdminOrdersPage() {
   }
 
   const orders = await prisma.order.findMany({
-    include: { 
+    include: {
       profile: true,
       orderItems: {
         include: { product: true }
@@ -29,23 +30,13 @@ export default async function AdminOrdersPage() {
     orderBy: { createdAt: 'desc' }
   })
 
-  async function updateOrderStatus(formData: FormData) {
-    'use server'
-    const orderId = formData.get('orderId') as string
-    const status = formData.get('status') as any
-    await prisma.order.update({
-      where: { id: orderId },
-      data: { status }
-    })
-    revalidatePath('/admin/orders')
-  }
 
   return (
     <div className="min-h-screen bg-background text-foreground py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10">
           <Link href="/admin" className="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-zinc-500 hover:text-white transition-colors mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
             Dashboard
           </Link>
           <h1 className="text-4xl md:text-5xl font-light italic tracking-tight">Order <span className="font-serif">Fulfillment.</span></h1>
@@ -54,14 +45,21 @@ export default async function AdminOrdersPage() {
 
         <div className="space-y-6">
           {orders.map((order) => (
-            <Card key={order.id} className="p-8 border-white/5 bg-primary/20 backdrop-blur-xl" hover={false}>
+            <Card
+              key={order.id}
+              className={`p-8 border-white/5 bg-primary/20 backdrop-blur-xl transition-all duration-500 ${order.status === 'CANCELLED' ? 'opacity-40 grayscale-[0.5] pointer-events-none border-dashed' : ''
+                }`}
+              hover={false}
+            >
               <div className="flex flex-col lg:flex-row justify-between gap-8">
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
                     <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">Order ID: {order.id.slice(0, 8)}</span>
                     <span className={`px-3 py-1 rounded-full text-[10px] uppercase font-bold border ${
                       order.status === 'PAID' ? 'bg-secondary/10 border-secondary/20 text-secondary' : 
-                      order.status === 'PENDING' ? 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500' : 
+                      order.status === 'PENDING' ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 
+                      order.status === 'PROCESSING' ? 'bg-blue-500/10 border-blue-500/20 text-blue-500' :
+                      order.status === 'CANCELLED' ? 'bg-red-500/10 border-red-500/20 text-red-500' :
                       'bg-zinc-500/10 border-zinc-500/20 text-zinc-500'
                     }`}>
                       {order.status}
@@ -90,17 +88,11 @@ export default async function AdminOrdersPage() {
                   <div className="text-[10px] tracking-[0.1em] uppercase text-zinc-500 font-bold">
                     {new Date(order.createdAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}
                   </div>
-                  <form action={updateOrderStatus} className="flex items-center gap-2">
-                    <input type="hidden" name="orderId" value={order.id} />
-                    <select name="status" className="bg-background/50 border border-white/10 rounded-xl px-4 py-2 text-xs focus:outline-none">
-                      <option value="PENDING">Pending</option>
-                      <option value="PAID">Paid</option>
-                      <option value="SHIPPED">Shipped</option>
-                      <option value="DELIVERED">Delivered</option>
-                      <option value="CANCELLED">Cancelled</option>
-                    </select>
-                    <button type="submit" className="px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-[10px] uppercase font-bold transition-colors">Update</button>
-                  </form>
+                  <StatusActions
+                    orderId={order.id}
+                    currentStatus={order.status}
+                    midtransOrderId={order.midtransOrderId || ''}
+                  />
                 </div>
               </div>
             </Card>

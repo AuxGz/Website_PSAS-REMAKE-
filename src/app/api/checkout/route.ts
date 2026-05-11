@@ -14,13 +14,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { addressId, shippingCost: providedShippingCost } = await request.json()
-
-    if (!addressId) {
-      return NextResponse.json({ error: 'Address is required' }, { status: 400 })
-    }
-
-    const shippingCost = Number(providedShippingCost) || 0
+    // Selected items dari frontend
+    const { selectedItemIds } = await request.json()
 
     // Get profile with cart items
     const profile = await prisma.profile.findUnique({
@@ -36,17 +31,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Cart is empty' }, { status: 400 })
     }
 
-    // Validate address belongs to user
-    const address = await prisma.address.findFirst({
-      where: { id: addressId, profileId: profile.id }
-    })
+    // Filter items based on selection if provided
+    const itemsToProcess = selectedItemIds && selectedItemIds.length > 0
+      ? profile.cartItems.filter(item => selectedItemIds.includes(item.id))
+      : profile.cartItems;
 
-    if (!address) {
-      return NextResponse.json({ error: 'Invalid address' }, { status: 400 })
+    if (itemsToProcess.length === 0) {
+      return NextResponse.json({ error: 'No items selected for checkout' }, { status: 400 })
     }
 
+
     // Check stock availability
-    for (const item of profile.cartItems) {
+    for (const item of itemsToProcess) {
       if (item.product.stock < item.quantity) {
         return NextResponse.json({
           error: `Stock tidak cukup untuk ${item.product.name}. Tersedia: ${item.product.stock}`
@@ -55,10 +51,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Calculate total
-    const subtotal = profile.cartItems.reduce(
+    const subtotal = itemsToProcess.reduce(
       (acc, item) => acc + Number(item.product.price) * item.quantity, 0
     )
-    const totalAmount = subtotal + shippingCost
+    const totalAmount = subtotal
 
     // Generate unique order ID for Midtrans
     const midtransOrderId = `SXG-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`
@@ -67,18 +63,23 @@ export async function POST(request: NextRequest) {
     const order = await prisma.order.create({
       data: {
         profileId: profile.id,
-        addressId: addressId,
         totalAmount: totalAmount,
-        shippingCost: shippingCost,
         midtransOrderId: midtransOrderId,
         status: 'PENDING',
         orderItems: {
-          create: profile.cartItems.map(item => ({
+          create: itemsToProcess.map(item => ({
             productId: item.productId,
             quantity: item.quantity,
             price: item.product.price,
           }))
         }
+      }
+    })
+    
+    // Clear ONLY selected items from cart
+    await prisma.cartItem.deleteMany({
+      where: { 
+        id: { in: itemsToProcess.map(item => item.id) }
       }
     })
 
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
         order_id: midtransOrderId,
         gross_amount: Math.round(totalAmount),
       },
-      item_details: profile.cartItems.map(item => ({
+      item_details: itemsToProcess.map(item => ({
         id: item.productId,
         price: Math.round(Number(item.product.price)),
         quantity: item.quantity,
@@ -97,14 +98,7 @@ export async function POST(request: NextRequest) {
       customer_details: {
         first_name: profile.fullName || 'Customer',
         email: profile.email || '',
-        phone: address.phone,
-        shipping_address: {
-          first_name: address.fullName,
-          phone: address.phone,
-          address: address.street,
-          city: address.city,
-          postal_code: address.postalCode,
-        }
+        phone: '-',
       }
     }
 

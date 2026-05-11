@@ -6,12 +6,18 @@ import Link from 'next/link'
 import Card from '@/components/ui/Card'
 import UserNav from '@/components/UserNav'
 import CheckoutButton from '@/components/CheckoutButton'
-import AddressSelector from '@/components/AddressSelector'
 import { Suspense } from 'react'
 import Script from 'next/script'
 import CheckoutClient from '@/components/CheckoutClient'
 
-export default async function CheckoutPage() {
+export default async function CheckoutPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ items?: string }>
+}) {
+  const { items: selectedItemsParam } = await searchParams;
+  const selectedItemIds = selectedItemsParam ? selectedItemsParam.split(',') : [];
+
   const cookieStore = await cookies()
   const supabase = createClient(cookieStore)
   const { data: { user } } = await supabase.auth.getUser()
@@ -29,9 +35,6 @@ export default async function CheckoutPage() {
             }
           }
         }
-      },
-      addresses: {
-        orderBy: { isDefault: 'desc' }
       }
     }
   })
@@ -40,11 +43,17 @@ export default async function CheckoutPage() {
     return redirect('/cart')
   }
 
-  const subtotal = profile.cartItems.reduce(
+  // Filter items based on selection
+  const filteredCartItems = selectedItemIds.length > 0
+    ? profile.cartItems.filter(item => selectedItemIds.includes(item.id))
+    : profile.cartItems;
+
+  if (filteredCartItems.length === 0) {
+    return redirect('/cart')
+  }
+
+  const subtotal = filteredCartItems.reduce(
     (acc, item) => acc + Number(item.product.price) * item.quantity, 0
-  )
-  const totalWeight = profile.cartItems.reduce(
-    (acc, item) => acc + (item.product.weight || 0) * item.quantity, 0
   )
 
   // Midtrans Snap JS URL (sandbox)
@@ -88,8 +97,8 @@ export default async function CheckoutPage() {
         </div>
 
         <CheckoutClient
-          initialAddresses={profile.addresses as any}
-          cartItems={profile.cartItems.map(item => ({
+          selectedItemIds={selectedItemIds}
+          cartItems={filteredCartItems.map(item => ({
             ...item,
             product: {
               ...item.product,
@@ -97,7 +106,6 @@ export default async function CheckoutPage() {
             }
           })) as any}
           subtotal={subtotal}
-          totalWeight={totalWeight}
         />
       </main>
 

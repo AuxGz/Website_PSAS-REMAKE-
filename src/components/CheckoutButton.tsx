@@ -4,9 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 interface CheckoutButtonProps {
-  addressId: string
-  shippingCost?: number
   disabled?: boolean
+  selectedItemIds: string[]
 }
 
 declare global {
@@ -15,17 +14,12 @@ declare global {
   }
 }
 
-export default function CheckoutButton({ addressId, shippingCost = 0, disabled }: CheckoutButtonProps) {
+export default function CheckoutButton({ disabled, selectedItemIds }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
 
   const handleCheckout = async () => {
-    if (!addressId) {
-      setError('Pilih alamat pengiriman terlebih dahulu')
-      return
-    }
-
     setLoading(true)
     setError('')
 
@@ -33,7 +27,7 @@ export default function CheckoutButton({ addressId, shippingCost = 0, disabled }
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ addressId, shippingCost })
+        body: JSON.stringify({ selectedItemIds })
       })
 
       const data = await res.json()

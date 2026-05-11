@@ -42,6 +42,8 @@ export default function RootLayout({
         {children}
         <SpeedInsights />
         <Analytics />
+        {/* Support for 3D Models */}
+        <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js" async></script>
       </body>
     </html>
   );

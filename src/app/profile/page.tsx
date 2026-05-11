@@ -6,7 +6,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Card from '@/components/ui/Card'
 import AvatarUpload from '@/components/AvatarUpload'
-import AddressManagement from '@/components/AddressManagement'
 
 export default async function ProfilePage() {
   const cookieStore = await cookies()
@@ -70,12 +69,14 @@ export default async function ProfilePage() {
           </Card>
 
           <div className="grid sm:grid-cols-2 gap-6">
-            <Card className="flex flex-col justify-center space-y-2">
-              <h3 className="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold">Total Orders</h3>
-              <p className="text-4xl font-light italic text-accent">
-                {await prisma.order.count({ where: { profileId: profile?.id } })}
-              </p>
-            </Card>
+            <Link href="/orders" className="block group">
+              <Card className="flex flex-col justify-center space-y-2 group-hover:border-accent/40 transition-all">
+                <h3 className="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold group-hover:text-accent transition-colors">Total Orders</h3>
+                <p className="text-4xl font-light italic text-accent">
+                  {await prisma.order.count({ where: { profileId: profile?.id } })}
+                </p>
+              </Card>
+            </Link>
             <Card className="flex flex-col justify-center space-y-2">
               <h3 className="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold">Cart Items</h3>
               <p className="text-4xl font-light italic text-secondary">
@@ -83,16 +84,6 @@ export default async function ProfilePage() {
               </p>
             </Card>
           </div>
-
-          <AddressManagement 
-            initialAddresses={(await prisma.address.findMany({ 
-              where: { profileId: profile?.id },
-              orderBy: { createdAt: 'desc' }
-            })).map(addr => ({
-              ...addr,
-              createdAt: addr.createdAt.toISOString()
-            })) as any} 
-          />
         </div>
 
         {/* Actions */}

@@ -2,23 +2,7 @@
 
 import { useState } from 'react'
 import Card from '@/components/ui/Card'
-import AddressSelector from '@/components/AddressSelector'
 import CheckoutSummary from '@/components/CheckoutSummary'
-
-interface Address {
-  id: string
-  label: string | null
-  fullName: string
-  phone: string
-  street: string
-  city: string
-  cityId: string | null
-  subdistrict: string | null
-  subdistrictId: string | null
-  province: string
-  provinceId: string | null
-  postalCode: string
-}
 
 interface ProductImage {
   url: string
@@ -37,46 +21,20 @@ interface CartItem {
 }
 
 interface CheckoutClientProps {
-  initialAddresses: Address[]
   cartItems: CartItem[]
   subtotal: number
-  totalWeight: number
+  selectedItemIds: string[]
 }
 
 export default function CheckoutClient({ 
-  initialAddresses, 
   cartItems, 
-  subtotal, 
-  totalWeight 
+  subtotal,
+  selectedItemIds
 }: CheckoutClientProps) {
-  const [selectedAddress, setSelectedAddress] = useState<Address | null>(
-    initialAddresses.find(a => (a as any).isDefault) || initialAddresses[0] || null
-  )
-
   return (
     <div className="grid lg:grid-cols-3 gap-12">
-      {/* Left — Address & Items */}
+      {/* Left — Items */}
       <div className="lg:col-span-2 space-y-8">
-        {/* Shipping Address */}
-        <Card className="space-y-6" hover={false}>
-          <h3 className="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold border-b border-white/5 pb-6">Shipping Address</h3>
-
-          {initialAddresses.length === 0 ? (
-            <div className="text-center py-8 space-y-4">
-              <p className="text-zinc-500 font-light italic">Belum ada alamat pengiriman.</p>
-              <a href="/profile" className="inline-block text-[10px] tracking-[0.2em] uppercase font-bold border border-secondary/30 px-6 py-3 rounded-xl text-secondary hover:bg-secondary hover:text-white transition-all">
-                Tambah Alamat di Profil
-              </a>
-            </div>
-          ) : (
-            <AddressSelector 
-              addresses={initialAddresses as any} 
-              defaultAddressId={selectedAddress?.id} 
-              onSelect={(addr) => setSelectedAddress(addr as any)}
-            />
-          )}
-        </Card>
-
         {/* Order Items */}
         <Card className="space-y-6" hover={false}>
           <h3 className="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold border-b border-white/5 pb-6">Order Items ({cartItems.length})</h3>
@@ -109,10 +67,7 @@ export default function CheckoutClient({
       <div className="lg:col-span-1">
         <CheckoutSummary
           subtotal={subtotal}
-          totalWeight={totalWeight}
-          selectedAddressId={selectedAddress?.id || ''}
-          selectedCityId={selectedAddress?.cityId || null}
-          selectedSubdistrictId={selectedAddress?.subdistrictId || null}
+          selectedItemIds={selectedItemIds}
         />
       </div>
     </div>
