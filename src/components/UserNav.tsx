@@ -8,13 +8,15 @@ export default async function UserNav() {
   const supabase = createClient(cookieStore);
   const { data: { user } } = await supabase.auth.getUser();
 
+  let isAdmin = false;
   let cartCount = 0;
   if (user) {
     const profile = await prisma.profile.findUnique({
       where: { userId: user.id },
-      select: { id: true }
+      select: { id: true, role: true }
     });
     if (profile) {
+      isAdmin = profile.role === 'ADMIN';
       cartCount = await prisma.cartItem.count({
         where: { profileId: profile.id }
       });
@@ -52,13 +54,29 @@ export default async function UserNav() {
   return (
     <div className="flex items-center gap-4">
       <CartIcon />
-      {user ? (
+      {isAdmin && (
         <Link 
-          href="/profile" 
-          className="text-[10px] tracking-[0.2em] uppercase font-medium border border-secondary px-6 py-2 rounded-full bg-secondary/10 text-secondary hover:bg-secondary hover:text-white transition-all duration-500"
+          href="/admin" 
+          className="text-[10px] tracking-[0.2em] uppercase font-medium border border-accent/20 px-4 py-2 rounded-full text-accent hover:bg-accent hover:text-black transition-all duration-500"
         >
-          Account
+          Admin
         </Link>
+      )}
+      {user ? (
+        <>
+          <Link 
+            href="/orders" 
+            className="text-[10px] tracking-[0.2em] uppercase font-medium border border-white/10 px-5 py-2 rounded-full text-zinc-400 hover:text-white hover:border-white/30 transition-all duration-500"
+          >
+            Orders
+          </Link>
+          <Link 
+            href="/profile" 
+            className="text-[10px] tracking-[0.2em] uppercase font-medium border border-secondary px-6 py-2 rounded-full bg-secondary/10 text-secondary hover:bg-secondary hover:text-white transition-all duration-500"
+          >
+            Account
+          </Link>
+        </>
       ) : (
         <Link 
           href="/login" 

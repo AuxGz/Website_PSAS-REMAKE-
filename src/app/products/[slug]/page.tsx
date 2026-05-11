@@ -3,9 +3,11 @@ import { createClient } from '@/utils/supabase/server'
 import prisma from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import AddToCartButton from '@/components/AddToCartButton'
 import UserNav from '@/components/UserNav'
 import { Suspense } from 'react'
+import ProductGallery from '@/components/ProductGallery'
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -15,7 +17,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
   const product = await prisma.product.findUnique({
     where: { slug: slug },
-    include: { category: true }
+    include: { 
+      category: true,
+      images: {
+        orderBy: { sortOrder: 'asc' }
+      }
+    }
   })
 
   if (!product) {
@@ -45,29 +52,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-2">
 
-          {/* Left: Product Visuals */}
-          <div className="space-y-6">
-            <div className="aspect-square w-full overflow-hidden rounded-[2.5rem] bg-primary/20 border border-white/5 relative group">
-              {/* PLACEHOLDER UNTUK 360 VIEW / IMAGE */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-zinc-700">
-                <svg className="mb-4 h-24 w-24 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                {product.has360View && (
-                  <div className="rounded-full bg-secondary/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-secondary border border-secondary/20">
-                    360° View Available
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Thumbnail Mockups */}
-            <div className="grid grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="aspect-square rounded-2xl bg-zinc-900 border border-white/5" />
-              ))}
-            </div>
-          </div>
+          {/* Left: Product Visuals (Interactive Gallery) */}
+          <ProductGallery 
+            images={product.images} 
+            productName={product.name} 
+            has360View={product.has360View} 
+          />
 
           {/* Right: Product Details */}
           <div className="flex flex-col">

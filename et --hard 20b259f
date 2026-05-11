@@ -1,0 +1,32 @@
+[33mf7fd225[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HotoriMBG[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mHotoriMBG[m[33m)[m HEAD@{0}: reset: moving to HotoriMBG
+[33mf7fd225[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HotoriMBG[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mHotoriMBG[m[33m)[m HEAD@{1}: merge HotoriMBG: Fast-forward
+[33m20b259f[m HEAD@{2}: checkout: moving from HotoriMBG to master
+[33mf7fd225[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HotoriMBG[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mHotoriMBG[m[33m)[m HEAD@{3}: checkout: moving from master to HotoriMBG
+[33m20b259f[m HEAD@{4}: checkout: moving from HotoriMBG to master
+[33mf7fd225[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HotoriMBG[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mHotoriMBG[m[33m)[m HEAD@{5}: commit: feat: connecting to midtrans, adding checkout, admin now able to add picture and 3d models
+[33m53a1059[m HEAD@{6}: reset: moving to HEAD
+[33m53a1059[m HEAD@{7}: commit: hate this
+[33m63fbd25[m HEAD@{8}: commit: hate myself vibecode the RajaOngkir, i should just make it myself, now im debugging it longer than making it myself
+[33m3344512[m HEAD@{9}: commit: test deploy, di localhost error mulu
+[33m20b259f[m HEAD@{10}: checkout: moving from master to HotoriMBG
+[33m20b259f[m HEAD@{11}: commit: feat: adding cart, changing wishlist in profile to cart items
+[33m8b66a91[m HEAD@{12}: commit: feat: adding avatar upload & auto compression (storage cuma 500MB) and refactor the codebase)
+[33mbc8cd8e[m HEAD@{13}: reset: moving to HEAD
+[33mbc8cd8e[m HEAD@{14}: commit: fix: so the PWA is the problem they trying to download a freaking 6.7MB video for the landing page, restricting the PWA from touching it
+[33m2d72179[m HEAD@{15}: commit: fix idk how many time i write this but, fixing landing page video not playing
+[33mbf1e04d[m HEAD@{16}: commit: perf: optimize TTFB with streaming and fix background video autoplay
+[33m8796ac2[m HEAD@{17}: commit: chore: final package-lock.json update
+[33m344080a[m HEAD@{18}: rebase (finish): returning to refs/heads/master
+[33m344080a[m HEAD@{19}: rebase (continue): perf: implement streaming archit, and lazy load middleware(it keep checking if the user has log-in or not)
+[33me2ff0f0[m HEAD@{20}: pull origin master --rebase (start): checkout e2ff0f0604c731c40e648c4cf08d779773813b95
+[33m14b6f4a[m HEAD@{21}: commit: perf: implement streaming archit, and lazy load middleware(it keep checking if the user has log-in or not)
+[33me411353[m HEAD@{22}: commit: fix: video on landing page not loading
+[33mac17dd0[m HEAD@{23}: commit: add interpage loading animation
+[33m1d70dbc[m HEAD@{24}: commit: feat: optimise performance, tambahin profile page, tambahin catalog filtering
+[33m35b9567[m HEAD@{25}: commit: style: add logo on the top left of /src/app/products/page.tsx
+[33m9cf2f37[m HEAD@{26}: commit: fix: resolve turbopack conflict and pwa type errors
+[33m279a70b[m HEAD@{27}: commit: style: fix logo login discord kekecilan
+[33m904c9f7[m HEAD@{28}: commit: fix: resolve vercel build type error and add prisma postinstall
+[33m442080e[m HEAD@{29}: commit: feat: complete auth flow and social login UI
+[33m3c2b7a3[m HEAD@{30}: commit: feat: adding supabase connection
+[33mb358f21[m HEAD@{31}: clone: from https://github.com/AuxGz/Website_PSAS-REMAKE-.git

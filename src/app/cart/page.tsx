@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import Card from '@/components/ui/Card'
 import CartItemRow from '@/components/CartItemRow'
+import CartClient from '@/components/CartClient'
 import UserNav from '@/components/UserNav'
 import { Suspense } from 'react'
 
@@ -36,8 +37,16 @@ export default async function CartPage() {
     }
   })
 
-  const cartItems = profile?.cartItems || []
-  const subtotal = cartItems.reduce((acc, item) => acc + (Number(item.product.price) * item.quantity), 0)
+  const cartItems = profile?.cartItems.map(item => ({
+    ...item,
+    product: {
+      ...item.product,
+      price: Number(item.product.price),
+      salePrice: item.product.salePrice ? Number(item.product.salePrice) : null
+    }
+  })) || []
+
+  const subtotal = cartItems.reduce((acc, item) => acc + (item.product.price * item.quantity), 0)
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-secondary/30">
@@ -99,56 +108,7 @@ export default async function CartPage() {
             </Link>
           </Card>
         ) : (
-          <div className="grid lg:grid-cols-3 gap-12">
-            {/* List Items */}
-            <div className="lg:col-span-2 space-y-2">
-              <div className="hidden md:grid grid-cols-[1fr,auto,auto] gap-6 px-6 py-4 text-[10px] tracking-[0.3em] uppercase text-zinc-600 border-b border-white/5">
-                <span>Product</span>
-                <span className="w-32 text-center">Quantity</span>
-                <span className="w-[120px] text-right">Total</span>
-              </div>
-              {cartItems.map((item: any) => (
-                <CartItemRow key={item.id} item={item} />
-              ))}
-            </div>
-
-            {/* Summary */}
-            <div className="lg:col-span-1">
-              <Card className="sticky top-32 space-y-8" hover={false}>
-                <h3 className="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold border-b border-white/5 pb-6">Order Summary</h3>
-                
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-zinc-500 font-light">Subtotal</span>
-                    <span className="text-sm font-medium">Rp {subtotal.toLocaleString('id-ID')}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-zinc-500 font-light">Shipping</span>
-                    <span className="text-sm font-medium text-secondary">Free</span>
-                  </div>
-                  <div className="pt-6 border-t border-white/5 flex justify-between items-end">
-                    <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400">Estimated Total</span>
-                    <span className="text-3xl font-light italic">Rp {subtotal.toLocaleString('id-ID')}</span>
-                  </div>
-                </div>
-
-                <button className="w-full h-16 rounded-2xl bg-secondary text-white text-[10px] tracking-[0.3em] uppercase font-bold hover:bg-secondary/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 shadow-2xl shadow-secondary/20">
-                  Proceed to Checkout
-                </button>
-
-                <Link 
-                  href="/products" 
-                  className="w-full h-14 rounded-2xl border border-white/5 text-zinc-500 flex items-center justify-center text-[10px] tracking-[0.3em] uppercase font-bold hover:bg-white/5 hover:text-white transition-all duration-500"
-                >
-                  Back to Catalog
-                </Link>
-                
-                <p className="text-[9px] text-center text-zinc-600 tracking-wider">
-                  Secure checkout powered by SummitX Systems
-                </p>
-              </Card>
-            </div>
-          </div>
+          <CartClient initialItems={cartItems} />
         )}
       </main>
 
