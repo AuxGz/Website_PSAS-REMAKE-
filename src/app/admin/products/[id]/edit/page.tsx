@@ -74,7 +74,11 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
 
         {/* 1. PRODUCT DETAILS FORM (CLIENT) */}
         <ProductEditForm 
-          product={product} 
+          product={{
+            ...product,
+            price: Number(product.price),
+            salePrice: product.salePrice ? Number(product.salePrice) : null
+          }} 
           categories={categories} 
           updateAction={updateProductDetails} 
         />
