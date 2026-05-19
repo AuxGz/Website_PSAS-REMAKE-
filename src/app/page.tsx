@@ -28,7 +28,7 @@ export default async function Home() {
             className="brightness-0 invert opacity-80"
           />
         </Link>
-        <div className="hidden md:flex gap-12 text-[10px] tracking-[0.3em] uppercase font-light text-zinc-400">
+        <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] tracking-[0.3em] uppercase font-light text-zinc-400">
           <Link href="#ready" className="hover:text-white transition-colors text-white">Experience</Link>
         </div>
 

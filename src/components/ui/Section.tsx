@@ -19,12 +19,15 @@ export default function Section({
     <section
       id={id}
       className={`
-        relative w-full overflow-hidden transform-gpu
+        relative w-full overflow-hidden
         ${fullHeight ? 'h-screen' : ''}
         ${snap ? 'snap-start' : ''}
         ${className}
       `}
-      style={{ willChange: 'transform' }}
+      style={{ 
+        transform: 'translateZ(0)',
+        backfaceVisibility: 'hidden',
+      }}
     >
       {children}
     </section>
