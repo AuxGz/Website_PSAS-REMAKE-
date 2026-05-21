@@ -17,10 +17,10 @@ export default function StrictScrollContainer({ children }: StrictScrollContaine
   const changeSlide = useCallback((direction: number) => {
     if (isLocked.current) return
 
-    const nextIndex = direction > 0 
-      ? Math.min(index + 1, totalSlides - 1) 
+    const nextIndex = direction > 0
+      ? Math.min(index + 1, totalSlides - 1)
       : Math.max(index - 1, 0)
-    
+
     if (nextIndex === index) return
 
     isLocked.current = true
@@ -52,7 +52,7 @@ export default function StrictScrollContainer({ children }: StrictScrollContaine
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault()
-      
+
       if (isLocked.current) return
 
       wheelAccumulator.current += e.deltaY
@@ -97,15 +97,15 @@ export default function StrictScrollContainer({ children }: StrictScrollContaine
   }, [changeSlide])
 
   return (
-    <div 
+    <div
       className="fixed inset-0 w-full h-full overflow-hidden bg-transparent selection:bg-secondary/30"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
       {/* Cinematic Content Layer */}
-      <div 
+      <div
         className="w-full h-full"
-        style={{ 
+        style={{
           transform: `translate3d(0, -${index * 100}%, 0)`,
           transition: 'transform 1s cubic-bezier(0.76, 0, 0.24, 1)',
           willChange: 'transform',

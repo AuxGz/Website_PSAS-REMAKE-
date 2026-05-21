@@ -45,10 +45,10 @@ export default async function Home() {
             <h2 className="text-[9px] md:text-[10px] tracking-[0.4em] md:tracking-[0.5em] uppercase text-secondary font-bold">
               Inspiring Exploration
             </h2>
-            <h1 className="text-5xl sm:text-7xl md:text-9xl font-light tracking-tighter leading-[0.9] italic text-white">
+            <h1 className="text-5xl sm:text-7xl md:text-9xl font-medium tracking-tighter leading-[0.9] italic text-white">
               Peak of <span className="font-serif">Excellence.</span>
             </h1>
-            <p className="max-w-md mx-auto text-sm md:text-lg text-zinc-400 font-light leading-relaxed tracking-wide px-4">
+            <p className="max-w-md mx-auto text-sm md:text-lg text-zinc-300 font-normal leading-relaxed tracking-wide px-4">
               Defined by endurance. Crafted for the extraordinary. SummitXGear is the pinnacle of outdoor luxury.
             </p>
             <div className="pt-4">
@@ -70,10 +70,10 @@ export default async function Home() {
               <h3 className="text-[9px] md:text-[10px] tracking-[0.4em] uppercase text-secondary font-bold">
                 The Art of Detail
               </h3>
-              <h2 className="text-3xl md:text-6xl font-light leading-tight text-white">
+              <h2 className="text-3xl md:text-6xl font-medium leading-tight text-white">
                 Mastery in Every <span className="font-serif italic">Stitch.</span>
               </h2>
-              <p className="text-zinc-400 font-light leading-relaxed text-base md:text-lg">
+              <p className="text-zinc-300 font-normal leading-relaxed text-base md:text-lg">
                 Every piece of SummitXGear equipment undergoes rigorous testing in the world's most unforgiving climates. We don't just build gear; we engineer legacies.
               </p>
               <Button variant="outline" href="/products">
@@ -90,10 +90,10 @@ export default async function Home() {
         <Section id="ready" className="flex flex-col items-center justify-center text-center px-6 bg-black">
           <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1533240332313-0db36245e452?auto=format&fit=crop&q=80')] bg-cover bg-fixed bg-center" />
           <div className="relative z-10 max-w-4xl space-y-10 md:space-y-12">
-            <h2 className="text-4xl sm:text-6xl md:text-8xl font-light tracking-tighter italic leading-tight text-white">
+            <h2 className="text-4xl sm:text-6xl md:text-8xl font-medium tracking-tighter italic leading-tight text-white">
               Your Next <span className="font-serif">Chapter</span> Awaits.
             </h2>
-            <p className="text-zinc-500 font-light tracking-[0.2em] uppercase text-[10px] md:text-xs">
+            <p className="text-zinc-400 font-normal tracking-[0.2em] uppercase text-[10px] md:text-xs">
               Are you prepared for the extraordinary?
             </p>
 
