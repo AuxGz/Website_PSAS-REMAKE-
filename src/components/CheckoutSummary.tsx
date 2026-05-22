@@ -7,15 +7,21 @@ import CheckoutButton from '@/components/CheckoutButton'
 interface CheckoutSummaryProps {
   subtotal: number
   selectedItemIds: string[]
+  shippingCost: number | null
+  shippingService: string | null
+  shippingAddressId: string | null
 }
 
 export default function CheckoutSummary({ 
   subtotal, 
-  selectedItemIds
+  selectedItemIds,
+  shippingCost,
+  shippingService,
+  shippingAddressId
 }: CheckoutSummaryProps) {
   const [loading, setLoading] = useState(false)
 
-  const total = subtotal
+  const total = subtotal + (shippingCost || 0)
 
   return (
     <Card className="p-8 space-y-8 bg-white/5 border-white/10 backdrop-blur-xl rounded-3xl sticky top-32">
@@ -28,8 +34,12 @@ export default function CheckoutSummary({
         </div>
         
         <div className="flex justify-between items-center text-sm">
-          <span className="text-zinc-500 font-light italic">Shipping</span>
-          <span className="text-secondary font-bold uppercase tracking-widest text-[10px]">Free / Included</span>
+          <span className="text-zinc-500 font-light italic">Shipping {shippingService ? `(${shippingService})` : ''}</span>
+          {shippingCost !== null ? (
+            <span className="font-medium">Rp {shippingCost.toLocaleString('id-ID')}</span>
+          ) : (
+            <span className="text-secondary font-bold uppercase tracking-widest text-[10px]">-</span>
+          )}
         </div>
 
         <div className="pt-6 border-t border-white/5 flex justify-between items-end">
@@ -43,7 +53,13 @@ export default function CheckoutSummary({
       </div>
 
       <div className="pt-4">
-        <CheckoutButton selectedItemIds={selectedItemIds} />
+        <CheckoutButton 
+          selectedItemIds={selectedItemIds} 
+          shippingAddressId={shippingAddressId}
+          shippingCost={shippingCost}
+          shippingService={shippingService}
+          disabled={!shippingAddressId || shippingCost === null}
+        />
       </div>
 
       {/* Security Notice */}

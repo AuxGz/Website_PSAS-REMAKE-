@@ -76,7 +76,17 @@ export async function syncWithMidtrans(orderId: string, midtransOrderId: string)
     return { success: true, status: newStatus }
   } catch (error: any) {
     console.error('Failed to sync with Midtrans:', error)
-    // Jika error dari Midtrans (misal 404), tampilkan pesannya
+    
+    // Check if it's a 404 error (Transaction doesn't exist)
+    const statusCode = error?.ApiResponse?.status_code || error?.httpStatusCode
+    if (statusCode === '404' || statusCode === 404) {
+      return { 
+        success: false, 
+        error: "Transaksi belum tercatat di Midtrans. Ini biasanya terjadi jika customer belum memilih metode pembayaran di halaman checkout."
+      }
+    }
+
+    // Jika error lain dari Midtrans, tampilkan pesannya
     const midtransError = error?.ApiResponse?.status_message || error?.message || 'Unknown error'
     return { success: false, error: `Midtrans Error: ${midtransError}` }
   }

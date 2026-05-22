@@ -43,6 +43,12 @@ export default async function CheckoutPage({
     return redirect('/cart')
   }
 
+  // Fetch user's shipping addresses
+  const shippingAddresses = await prisma.shippingAddress.findMany({
+    where: { profileId: profile.id },
+    orderBy: [{ isDefault: 'desc' }, { createdAt: 'desc' }]
+  })
+
   // Filter items based on selection
   const filteredCartItems = selectedItemIds.length > 0
     ? profile.cartItems.filter(item => selectedItemIds.includes(item.id))
@@ -106,6 +112,7 @@ export default async function CheckoutPage({
             }
           })) as any}
           subtotal={subtotal}
+          initialAddresses={shippingAddresses}
         />
       </main>
 
