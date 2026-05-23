@@ -6,6 +6,9 @@ import { useRouter } from 'next/navigation'
 interface CheckoutButtonProps {
   disabled?: boolean
   selectedItemIds: string[]
+  shippingAddressId?: string | null
+  shippingCost?: number | null
+  shippingService?: string | null
 }
 
 declare global {
@@ -14,7 +17,13 @@ declare global {
   }
 }
 
-export default function CheckoutButton({ disabled, selectedItemIds }: CheckoutButtonProps) {
+export default function CheckoutButton({ 
+  disabled, 
+  selectedItemIds,
+  shippingAddressId,
+  shippingCost,
+  shippingService
+}: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
@@ -27,7 +36,12 @@ export default function CheckoutButton({ disabled, selectedItemIds }: CheckoutBu
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ selectedItemIds })
+        body: JSON.stringify({ 
+          selectedItemIds,
+          shippingAddressId,
+          shippingCost,
+          shippingService
+        })
       })
 
       const data = await res.json()

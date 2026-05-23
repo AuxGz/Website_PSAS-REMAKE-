@@ -7,11 +7,12 @@ export default async function CheckoutPendingPage({
 }) {
   const { order_id } = await searchParams
 
-  const snapUrl = process.env.MIDTRANS_IS_PRODUCTION === 'true'
+  const isProd = process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === 'true';
+  const snapUrl = isProd
     ? 'https://app.midtrans.com/snap/snap.js'
-    : 'https://app.sandbox.midtrans.com/snap/snap.js'
-    
-  const clientKey = process.env.MIDTRANS_CLIENT_KEY || ''
+    : 'https://app.sandbox.midtrans.com/snap/snap.js';
+  const clientKey = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || '';
+
 
   return (
     <PendingClient 

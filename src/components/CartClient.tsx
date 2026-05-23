@@ -79,10 +79,7 @@ export default function CartClient({ initialItems }: CartClientProps) {
               <span className="text-zinc-500 font-light italic">Subtotal</span>
               <span className="font-medium">Rp {subtotal.toLocaleString('id-ID')}</span>
             </div>
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-zinc-500 font-light italic">Shipping</span>
-              <span className="text-secondary font-bold uppercase tracking-widest text-[10px]">Free</span>
-            </div>
+
             <div className="pt-6 border-t border-white/5 flex justify-between items-end">
               <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400">Total Amount</span>
               <span className="text-3xl font-black tracking-tighter text-white">Rp {subtotal.toLocaleString('id-ID')}</span>
