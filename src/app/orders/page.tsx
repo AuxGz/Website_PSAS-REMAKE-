@@ -48,17 +48,15 @@ export default async function OrdersPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-secondary/30">
-      <nav className="sticky top-0 z-50 border-b border-white/5 bg-background/50 backdrop-blur-xl">
+      <nav className="sticky top-0 z-50 border-b border-white/5 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between">
+          <div className="flex h-14 md:h-20 items-center justify-between">
             <Link href="/" className="group flex items-center justify-center transition-transform hover:scale-110">
               <span className="text-xl font-serif italic tracking-tighter">SummitXGear</span>
             </Link>
-            <div className="flex items-center gap-4">
-              <Suspense fallback={<div className="h-8 w-20 animate-pulse bg-white/5 rounded-full" />}>
-                <UserNav />
-              </Suspense>
-            </div>
+            <Suspense fallback={<div className="h-8 w-20 animate-pulse bg-white/5 rounded-full" />}>
+              <UserNav />
+            </Suspense>
           </div>
         </div>
       </nav>
@@ -78,7 +76,7 @@ export default async function OrdersPage() {
             <Card className="py-20 text-center space-y-6" hover={false}>
               <div className="flex justify-center">
                 <div className="h-20 w-20 rounded-full bg-white/5 flex items-center justify-center text-zinc-700">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="m20 10-6.07-1.19L12 3 9.07 8.81 3 10l4.5 4.5L6.21 21 12 17.27 17.79 21l-1.29-6.5L22 10z"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="m20 10-6.07-1.19L12 3 9.07 8.81 3 10l4.5 4.5L6.21 21 12 17.27 17.79 21l-1.29-6.5L22 10z" /></svg>
                 </div>
               </div>
               <div className="space-y-2">
@@ -119,7 +117,7 @@ export default async function OrdersPage() {
                           <img src={item.product.images[0].url} alt={item.product.name} className="h-full w-full object-cover" />
                         ) : (
                           <div className="h-full w-full flex items-center justify-center text-zinc-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>
                           </div>
                         )}
                       </div>
@@ -140,9 +138,9 @@ export default async function OrdersPage() {
                     <span className="text-[10px] tracking-[0.2em] uppercase text-zinc-500 font-bold">Total Payment</span>
                     <span className="text-xl font-bold text-white">Rp {Number(order.totalAmount).toLocaleString('id-ID')}</span>
                   </div>
-                  
+
                   {order.status === 'PENDING' && order.midtransToken && (
-                    <Link 
+                    <Link
                       href={`/checkout/pending?order_id=${order.midtransOrderId}`}
                       className="h-10 px-6 rounded-xl border border-secondary text-secondary text-[9px] tracking-[0.2em] uppercase font-bold hover:bg-secondary hover:text-white transition-all flex items-center justify-center"
                     >

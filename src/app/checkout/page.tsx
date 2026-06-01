@@ -77,17 +77,15 @@ export default async function CheckoutPage({
         strategy="afterInteractive"
       />
 
-      <nav className="sticky top-0 z-50 border-b border-white/5 bg-background/50 backdrop-blur-xl">
+      <nav className="sticky top-0 z-50 border-b border-white/5 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between">
+          <div className="flex h-14 md:h-20 items-center justify-between">
             <Link href="/" className="group flex items-center justify-center transition-transform hover:scale-110">
               <span className="text-xl font-serif italic tracking-tighter">SummitXGear</span>
             </Link>
-            <div className="flex items-center gap-4">
-              <Suspense fallback={<div className="h-8 w-20 animate-pulse bg-white/5 rounded-full" />}>
-                <UserNav />
-              </Suspense>
-            </div>
+            <Suspense fallback={<div className="h-8 w-20 animate-pulse bg-white/5 rounded-full" />}>
+              <UserNav />
+            </Suspense>
           </div>
         </div>
       </nav>

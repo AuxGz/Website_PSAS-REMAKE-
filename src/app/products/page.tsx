@@ -9,18 +9,18 @@ import Button from '@/components/ui/Button'
 import AddToCartButton from '@/components/AddToCartButton'
 
 // Caching aktif (60 detik)
-export const revalidate = 60; 
+export const revalidate = 60;
 
 /**
  * KOMPONEN UNTUK AMBIL DATA PRODUK (DIPISAH AGAR BISA STREAMING)
  */
 async function ProductGrid({ selectedCategory }: { selectedCategory?: string }) {
   const products = await prisma.product.findMany({
-    where: { 
+    where: {
       isActive: true,
       ...(selectedCategory ? { category: { slug: selectedCategory } } : {})
     },
-    include: { 
+    include: {
       category: true,
       images: {
         where: { type: 'THUMBNAIL' },
@@ -50,10 +50,10 @@ async function ProductGrid({ selectedCategory }: { selectedCategory?: string }) 
         <Link href={`/products/${product.slug}`} key={product.id} className="group relative block">
           <div className="aspect-[4/5] w-full overflow-hidden rounded-3xl bg-primary/20 border border-white/5 transition-all group-hover:border-secondary/20 group-hover:bg-primary/40 relative">
             {product.images[0] ? (
-              <Image 
-                src={product.images[0].url} 
-                alt={product.name} 
-                fill 
+              <Image
+                src={product.images[0].url}
+                alt={product.name}
+                fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                 className="object-cover transition-transform duration-1000 group-hover:scale-110"
               />
@@ -64,7 +64,7 @@ async function ProductGrid({ selectedCategory }: { selectedCategory?: string }) 
                 </svg>
               </div>
             )}
-            
+
             {/* Quick Add Button */}
             <div className="absolute bottom-4 right-4 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 z-10">
               <AddToCartButton productId={product.id} />
@@ -84,20 +84,20 @@ async function ProductGrid({ selectedCategory }: { selectedCategory?: string }) 
 // Komponen terpisah untuk Category Bar agar tidak memblokir TTFB
 async function CategoryBar({ selectedCategory }: { selectedCategory?: string }) {
   const categories = await prisma.category.findMany({ orderBy: { name: 'asc' } });
-  
+
   return (
     <div className="mb-10 flex gap-3 overflow-x-auto pb-4 no-scrollbar md:justify-center">
-      <Link 
-        href="/products" 
-        className={`rounded-full px-6 py-2.5 text-sm font-medium transition-all ${!selectedCategory ? 'bg-secondary text-white' : 'border border-white/10 bg-primary/30'}`}
+      <Link
+        href="/products"
+        className={`whitespace-nowrap shrink-0 rounded-full px-6 py-2.5 text-sm font-medium transition-all ${!selectedCategory ? 'bg-secondary text-white' : 'border border-white/10 bg-primary/30'}`}
       >
         All Gear
       </Link>
       {categories.map((cat) => (
-        <Link 
-          key={cat.id} 
-          href={`/products?category=${encodeURIComponent(cat.slug)}`} 
-          className={`rounded-full px-6 py-2.5 text-sm font-medium transition-all ${selectedCategory === cat.slug ? 'bg-secondary text-white' : 'border border-white/10 bg-primary/30'}`}
+        <Link
+          key={cat.id}
+          href={`/products?category=${encodeURIComponent(cat.slug)}`}
+          className={`whitespace-nowrap shrink-0 rounded-full px-6 py-2.5 text-sm font-medium transition-all ${selectedCategory === cat.slug ? 'bg-secondary text-white' : 'border border-white/10 bg-primary/30'}`}
         >
           {cat.name}
         </Link>
@@ -118,17 +118,15 @@ export default async function ProductsPage({
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <nav className="sticky top-0 z-50 border-b border-white/5 bg-background/50 backdrop-blur-xl">
+      <nav className="sticky top-0 z-50 border-b border-white/5 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between">
+          <div className="flex h-14 md:h-20 items-center justify-between">
             <Link href="/" className="group flex items-center justify-center transition-transform hover:scale-110">
               <Image src="/icons/icons-120x40.jpg" alt="Logo" width={120} height={40} className="object-contain" />
             </Link>
-            <div className="flex items-center gap-4">
-              <Suspense fallback={<div className="h-8 w-20 animate-pulse bg-white/5 rounded-full" />}>
-                <UserNav />
-              </Suspense>
-            </div>
+            <Suspense fallback={<div className="h-8 w-20 animate-pulse bg-white/5 rounded-full" />}>
+              <UserNav />
+            </Suspense>
           </div>
         </div>
       </nav>
@@ -142,14 +140,14 @@ export default async function ProductsPage({
         </div>
 
         {/* Categories & Products - Menggunakan KEY agar responsif saat diklik cepat */}
-        <Suspense 
+        <Suspense
           key={`categories-${selectedCategory}`}
           fallback={<div className="h-10 w-full animate-pulse bg-white/5 rounded-full mb-10" />}
         >
-           <CategoryBar selectedCategory={selectedCategory} />
+          <CategoryBar selectedCategory={selectedCategory} />
         </Suspense>
 
-        <Suspense 
+        <Suspense
           key={`products-${selectedCategory}`}
           fallback={
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
