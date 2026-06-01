@@ -17,7 +17,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
   const product = await prisma.product.findUnique({
     where: { slug: slug },
-    include: { 
+    include: {
       category: true,
       images: {
         orderBy: { sortOrder: 'asc' }
@@ -32,13 +32,13 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Navbar Simple */}
-      <nav className="border-b border-white/5 bg-background/50 backdrop-blur-xl">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex h-20 items-center justify-between">
+      <nav className="sticky top-0 z-50 border-b border-white/5 bg-background/80 backdrop-blur-xl">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex h-14 md:h-20 items-center justify-between">
           <Link href="/products" className="flex items-center gap-2 text-sm text-zinc-400 hover:text-secondary transition-colors">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Back to Catalog
+            <span className="hidden md:inline">Back to Catalog</span>
           </Link>
           <div className="flex items-center gap-6">
             <div className="hidden md:block text-sm font-bold tracking-widest opacity-50 uppercase text-accent">{product.category.name}</div>
@@ -53,10 +53,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         <div className="grid gap-12 lg:grid-cols-2">
 
           {/* Left: Product Visuals (Interactive Gallery) */}
-          <ProductGallery 
-            images={product.images} 
-            productName={product.name} 
-            has360View={product.has360View} 
+          <ProductGallery
+            images={product.images}
+            productName={product.name}
+            has360View={product.has360View}
           />
 
           {/* Right: Product Details */}
