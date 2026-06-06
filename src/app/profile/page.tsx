@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Card from '@/components/ui/Card'
 import AvatarUpload from '@/components/AvatarUpload'
+import EditableFullName from '@/components/EditableFullName'
 
 export default async function ProfilePage() {
   const cookieStore = await cookies()
@@ -57,7 +58,7 @@ export default async function ProfilePage() {
               </div>
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b border-white/5 pb-4">
                 <span className="text-sm text-zinc-500 font-light">Full Name</span>
-                <span className="text-sm font-medium text-foreground">{profile?.fullName || 'Not provided'}</span>
+                <EditableFullName currentName={profile?.fullName || ''} />
               </div>
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                 <span className="text-sm text-zinc-500 font-light">Member Since</span>

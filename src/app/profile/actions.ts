@@ -55,3 +55,32 @@ export async function updateAvatarUrl(url: string) {
     return { success: false, error: 'Failed to update database' };
   }
 }
+
+export async function updateFullName(fullName: string) {
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+  
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { success: false, error: 'Unauthorized' };
+  }
+
+  const trimmed = fullName.trim();
+  if (!trimmed || trimmed.length > 100) {
+    return { success: false, error: 'Name must be between 1 and 100 characters' };
+  }
+
+  try {
+    await prisma.profile.update({
+      where: { userId: user.id },
+      data: { fullName: trimmed },
+    });
+    
+    revalidatePath('/profile');
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating full name:', error);
+    return { success: false, error: 'Failed to update name' };
+  }
+}
