@@ -77,7 +77,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   // Calculate average rating
   const reviews = (product.reviews || []).map(r => ({
     ...r,
-    createdAt: r.createdAt.toISOString(),
+    createdAt: typeof r.createdAt === 'string' ? r.createdAt : r.createdAt.toISOString(),
   }));
   const averageRating = reviews.length > 0
     ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
