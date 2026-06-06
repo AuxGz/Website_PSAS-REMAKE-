@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
+import MobileNavMenu from './MobileNavMenu';
 
 export default async function UserNav() {
   const cookieStore = await cookies();
@@ -26,19 +27,19 @@ export default async function UserNav() {
   }
 
   const CartIcon = () => (
-    <Link 
-      href="/cart" 
+    <Link
+      href="/cart"
       className="relative group p-2 text-zinc-400 hover:text-white transition-all duration-300"
     >
-      <svg 
-        xmlns="http://www.w3.org/2000/svg" 
-        width="20" 
-        height="20" 
-        viewBox="0 0 24 24" 
-        fill="none" 
-        stroke="currentColor" 
-        strokeWidth="1.5" 
-        strokeLinecap="round" 
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
         strokeLinejoin="round"
       >
         <circle cx="8" cy="21" r="1" />
@@ -54,40 +55,51 @@ export default async function UserNav() {
   );
 
   return (
-    <div className="flex items-center gap-4">
-      <CartIcon />
-      {isAdmin && (
-        <Link 
-          href="/admin" 
-          className="text-[10px] tracking-[0.2em] uppercase font-medium border border-accent/20 px-4 py-2 rounded-full text-accent hover:bg-accent hover:text-black transition-all duration-500"
-        >
-          Admin
-        </Link>
-      )}
-      {user ? (
-        <>
-          <Link 
-            href="/orders" 
-            className="text-[10px] tracking-[0.2em] uppercase font-medium border border-white/10 px-5 py-2 rounded-full text-zinc-400 hover:text-white hover:border-white/30 transition-all duration-500"
+    <>
+      {/* Desktop Nav - inline links */}
+      <div className="hidden md:flex items-center gap-4">
+        <CartIcon />
+        {isAdmin && (
+          <Link
+            href="/admin"
+            className="text-[10px] tracking-[0.2em] uppercase font-medium border border-accent/20 px-4 py-2 rounded-full text-accent hover:bg-accent hover:text-black transition-all duration-500"
           >
-            Orders
+            Admin
           </Link>
-          <Link 
-            href="/profile" 
-            className="text-[10px] tracking-[0.2em] uppercase font-medium border border-secondary px-6 py-2 rounded-full bg-secondary/10 text-secondary hover:bg-secondary hover:text-white transition-all duration-500"
+        )}
+        {user ? (
+          <>
+            <Link
+              href="/orders"
+              className="text-[10px] tracking-[0.2em] uppercase font-medium border border-white/10 px-5 py-2 rounded-full text-zinc-400 hover:text-white hover:border-white/30 transition-all duration-500"
+            >
+              Orders
+            </Link>
+            <Link
+              href="/profile"
+              className="text-[10px] tracking-[0.2em] uppercase font-medium border border-secondary px-6 py-2 rounded-full bg-secondary/10 text-secondary hover:bg-secondary hover:text-white transition-all duration-500"
+            >
+              Account
+            </Link>
+          </>
+        ) : (
+          <Link
+            href="/login"
+            className="text-[10px] tracking-[0.2em] uppercase font-medium border border-white/20 px-6 py-2 rounded-full hover:bg-white hover:text-black transition-all duration-500"
           >
-            Account
+            Enter
           </Link>
-        </>
-      ) : (
-        <Link 
-          href="/login" 
-          className="text-[10px] tracking-[0.2em] uppercase font-medium border border-white/20 px-6 py-2 rounded-full hover:bg-white hover:text-black transition-all duration-500"
-        >
-          Enter
-        </Link>
-      )}
-    </div>
+        )}
+      </div>
+
+      {/* Mobile Nav - hamburger menu */}
+      <div className="md:hidden">
+        <MobileNavMenu
+          isAdmin={isAdmin}
+          isLoggedIn={!!user}
+          cartCount={cartCount}
+        />
+      </div>
+    </>
   );
 }
-

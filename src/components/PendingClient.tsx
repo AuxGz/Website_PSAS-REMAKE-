@@ -27,7 +27,10 @@ export default function PendingClient({ orderId, snapUrl, clientKey }: PendingCl
       const res = await fetch(`/api/orders/${id}`)
       const data = await res.json()
       if (data.token) {
-        setToken(data.token)
+        console.log('Payment token received:', data.token);
+        setToken(data.token);
+      } else {
+        console.error('No token in response');
       }
     } catch (err) {
       console.error('Failed to fetch order token', err)
@@ -35,14 +38,25 @@ export default function PendingClient({ orderId, snapUrl, clientKey }: PendingCl
   }
 
   const handlePay = () => {
-    if (window.snap && token) {
-      window.snap.pay(token, {
-        onSuccess: () => router.push('/checkout/success'),
-        onPending: () => router.refresh(),
-        onError: () => alert('Payment failed. Please try again from Order History.'),
-      })
+    if (!token) {
+      alert('Payment token is not available. Please try again later.');
+      return;
     }
-  }
+    if (!snapUrl) {
+      alert('Payment script URL is missing. Contact support.');
+      return;
+    }
+    if (typeof window.snap === 'undefined') {
+      // If Snap script is not fully loaded, alert the user
+      alert('Payment system is still loading. Please try again in a few seconds.');
+      return;
+    }
+    window.snap.pay(token, {
+      onSuccess: () => router.push('/checkout/success'),
+      onPending: () => router.refresh(),
+      onError: () => alert('Payment failed. Please try again from Order History.'),
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
@@ -50,13 +64,14 @@ export default function PendingClient({ orderId, snapUrl, clientKey }: PendingCl
         src={snapUrl}
         data-client-key={clientKey}
         strategy="afterInteractive"
+        onError={() => alert('Failed to load payment script.')}
       />
-      
+
       <Card className="max-w-md w-full p-8 text-center space-y-6" hover={false}>
         <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-yellow-500/10 text-yellow-500">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
         </div>
-        
+
         <div>
           <h1 className="text-3xl font-light italic mb-2">Payment Pending</h1>
           <p className="text-zinc-500 text-sm font-light leading-relaxed">
@@ -66,18 +81,18 @@ export default function PendingClient({ orderId, snapUrl, clientKey }: PendingCl
 
         <div className="pt-6 border-t border-white/5 space-y-3">
           {token ? (
-            <button 
+            <button
               onClick={handlePay}
               className="block w-full rounded-xl bg-secondary text-white py-4 text-[10px] tracking-[0.3em] uppercase font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-secondary/20"
             >
               Pay Now / Show Instructions
             </button>
           ) : (
-             <div className="py-4 text-[10px] tracking-[0.2em] uppercase text-zinc-600 font-bold animate-pulse">
-                Loading Payment Data...
-             </div>
+            <div className="py-4 text-[10px] tracking-[0.2em] uppercase text-zinc-600 font-bold animate-pulse">
+              Loading Payment Data...
+            </div>
           )}
-          
+
           <Link href="/orders" className="block w-full rounded-xl bg-white/5 border border-white/10 py-4 text-[10px] tracking-[0.3em] uppercase font-bold text-zinc-300 hover:bg-white/10 transition-all">
             Check Order Status
           </Link>

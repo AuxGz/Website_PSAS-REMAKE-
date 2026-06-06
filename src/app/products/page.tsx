@@ -7,7 +7,6 @@ import { Suspense } from 'react'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 import AddToCartButton from '@/components/AddToCartButton'
-
 import { unstable_cache } from 'next/cache';
 
 const getCachedProducts = unstable_cache(
@@ -36,6 +35,9 @@ const getCachedCategories = unstable_cache(
   ['categories-list'],
   { revalidate: 300, tags: ['categories'] }
 );
+
+// Caching aktif (60 detik)
+export const revalidate = 60;
 
 /**
  * KOMPONEN UNTUK AMBIL DATA PRODUK (DIPISAH AGAR BISA STREAMING)
@@ -102,7 +104,7 @@ async function CategoryBar({ selectedCategory }: { selectedCategory?: string }) 
     <div className="mb-10 flex gap-3 overflow-x-auto pb-4 no-scrollbar md:justify-center">
       <Link
         href="/products"
-        className={`rounded-full px-6 py-2.5 text-sm font-medium transition-all ${!selectedCategory ? 'bg-secondary text-white' : 'border border-white/10 bg-primary/30'}`}
+        className={`whitespace-nowrap shrink-0 rounded-full px-6 py-2.5 text-sm font-medium transition-all ${!selectedCategory ? 'bg-secondary text-white' : 'border border-white/10 bg-primary/30'}`}
       >
         All Gear
       </Link>
@@ -110,7 +112,7 @@ async function CategoryBar({ selectedCategory }: { selectedCategory?: string }) 
         <Link
           key={cat.id}
           href={`/products?category=${encodeURIComponent(cat.slug)}`}
-          className={`rounded-full px-6 py-2.5 text-sm font-medium transition-all ${selectedCategory === cat.slug ? 'bg-secondary text-white' : 'border border-white/10 bg-primary/30'}`}
+          className={`whitespace-nowrap shrink-0 rounded-full px-6 py-2.5 text-sm font-medium transition-all ${selectedCategory === cat.slug ? 'bg-secondary text-white' : 'border border-white/10 bg-primary/30'}`}
         >
           {cat.name}
         </Link>
@@ -131,17 +133,15 @@ export default async function ProductsPage({
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <nav className="sticky top-0 z-50 border-b border-white/5 bg-background/50 backdrop-blur-xl">
+      <nav className="sticky top-0 z-50 border-b border-white/5 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between">
+          <div className="flex h-14 md:h-20 items-center justify-between">
             <Link href="/" className="group flex items-center justify-center transition-transform hover:scale-110">
               <Image src="/icons/icons-120x40.jpg" alt="Logo" width={120} height={40} className="object-contain" />
             </Link>
-            <div className="flex items-center gap-4">
-              <Suspense fallback={<div className="h-8 w-20 animate-pulse bg-white/5 rounded-full" />}>
-                <UserNav />
-              </Suspense>
-            </div>
+            <Suspense fallback={<div className="h-8 w-20 animate-pulse bg-white/5 rounded-full" />}>
+              <UserNav />
+            </Suspense>
           </div>
         </div>
       </nav>

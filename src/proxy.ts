@@ -9,9 +9,11 @@ export default async function proxy(request: NextRequest) {
 
   // Proteksi: Hanya rute ini yang butuh pengecekan login
   const isProtectedRoute = 
-    pathname.startsWith('/products') || 
     pathname.startsWith('/admin') ||
-    pathname.startsWith('/profile');
+    pathname.startsWith('/profile') ||
+    pathname.startsWith('/checkout') ||
+    pathname.startsWith('/orders') ||
+    pathname.startsWith('/cart');
 
   // Hanya panggil getUser JIKA rutenya memang butuh login
   if (isProtectedRoute) {

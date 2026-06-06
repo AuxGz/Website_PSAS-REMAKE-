@@ -14,8 +14,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Selected items dari frontend
-    const { selectedItemIds } = await request.json()
+    // Selected items and shipping data dari frontend
+    const { 
+      selectedItemIds,
+      shippingAddressId,
+      shippingCost,
+      shippingService
+    } = await request.json()
+
+    // Validate shipping info
+    if (!shippingAddressId || shippingCost === undefined || shippingCost === null) {
+      return NextResponse.json({ error: 'Data pengiriman tidak lengkap' }, { status: 400 })
+    }
 
     // Get profile with cart items
     const profile = await prisma.profile.findUnique({
@@ -54,7 +64,7 @@ export async function POST(request: NextRequest) {
     const subtotal = itemsToProcess.reduce(
       (acc, item) => acc + Number(item.product.price) * item.quantity, 0
     )
-    const totalAmount = subtotal
+    const totalAmount = subtotal + Number(shippingCost)
 
     // Generate unique order ID for Midtrans
     const midtransOrderId = `SXG-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`
@@ -64,6 +74,9 @@ export async function POST(request: NextRequest) {
       data: {
         profileId: profile.id,
         totalAmount: totalAmount,
+        shippingCost: Number(shippingCost),
+        shippingService: shippingService,
+        shippingAddressId: shippingAddressId,
         midtransOrderId: midtransOrderId,
         status: 'PENDING',
         orderItems: {
@@ -84,17 +97,29 @@ export async function POST(request: NextRequest) {
     })
 
     // Create Midtrans Snap transaction
+    const itemDetails = itemsToProcess.map(item => ({
+      id: item.productId,
+      price: Math.round(Number(item.product.price)),
+      quantity: item.quantity,
+      name: item.product.name.substring(0, 50), // Midtrans max 50 chars
+    }))
+
+    // Add shipping cost as a line item
+    if (shippingCost > 0) {
+      itemDetails.push({
+        id: 'SHIPPING',
+        price: Math.round(Number(shippingCost)),
+        quantity: 1,
+        name: `Ongkos Kirim (${shippingService || 'Kurir'})`.substring(0, 50),
+      })
+    }
+
     const transactionParams = {
       transaction_details: {
         order_id: midtransOrderId,
         gross_amount: Math.round(totalAmount),
       },
-      item_details: itemsToProcess.map(item => ({
-        id: item.productId,
-        price: Math.round(Number(item.product.price)),
-        quantity: item.quantity,
-        name: item.product.name.substring(0, 50), // Midtrans max 50 chars
-      })),
+      item_details: itemDetails,
       customer_details: {
         first_name: profile.fullName || 'Customer',
         email: profile.email || '',

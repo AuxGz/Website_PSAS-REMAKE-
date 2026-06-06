@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Card from '@/components/ui/Card'
 import CheckoutSummary from '@/components/CheckoutSummary'
+import ShippingAddressSelector from './ShippingAddressSelector'
+import ShippingCostSelector from './ShippingCostSelector'
 
 interface ProductImage {
   url: string
@@ -11,6 +13,7 @@ interface ProductImage {
 interface Product {
   name: string
   price: any
+  weight: number | null
   images: ProductImage[]
 }
 
@@ -24,17 +27,65 @@ interface CheckoutClientProps {
   cartItems: CartItem[]
   subtotal: number
   selectedItemIds: string[]
+  initialAddresses: any[]
 }
 
 export default function CheckoutClient({ 
   cartItems, 
   subtotal,
-  selectedItemIds
+  selectedItemIds,
+  initialAddresses
 }: CheckoutClientProps) {
+  const [addresses, setAddresses] = useState(initialAddresses)
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null)
+  const [destinationCityId, setDestinationCityId] = useState<string | null>(null)
+  
+  const [shippingCost, setShippingCost] = useState<number | null>(null)
+  const [shippingService, setShippingService] = useState<string | null>(null)
+
+  // Default weight to 1000g (1kg) if product doesn't have weight
+  const totalWeight = cartItems.reduce((total, item) => {
+    return total + (item.product.weight || 1000) * item.quantity
+  }, 0)
+
+  const handleAddressSelect = (addressId: string, cityId: string) => {
+    setSelectedAddressId(addressId)
+    setDestinationCityId(cityId)
+    // Reset shipping cost when address changes
+    setShippingCost(null)
+    setShippingService(null)
+  }
+
+  const handleAddressAdded = (newAddress: any) => {
+    setAddresses([newAddress, ...addresses])
+  }
+
+  const handleShippingSelect = (cost: number, service: string) => {
+    setShippingCost(cost)
+    setShippingService(service)
+  }
+
   return (
     <div className="grid lg:grid-cols-3 gap-12">
       {/* Left — Items */}
       <div className="lg:col-span-2 space-y-8">
+        
+        {/* Shipping Address */}
+        <ShippingAddressSelector
+          addresses={addresses}
+          selectedAddressId={selectedAddressId}
+          onSelect={handleAddressSelect}
+          onAddressAdded={handleAddressAdded}
+        />
+
+        {/* Shipping Service */}
+        <ShippingCostSelector
+          destinationCityId={destinationCityId}
+          totalWeightGrams={totalWeight}
+          onSelect={handleShippingSelect}
+          selectedService={shippingService}
+        />
+
         {/* Order Items */}
         <Card className="space-y-6" hover={false}>
           <h3 className="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold border-b border-white/5 pb-6">Order Items ({cartItems.length})</h3>
@@ -68,6 +119,9 @@ export default function CheckoutClient({
         <CheckoutSummary
           subtotal={subtotal}
           selectedItemIds={selectedItemIds}
+          shippingCost={shippingCost}
+          shippingService={shippingService}
+          shippingAddressId={selectedAddressId}
         />
       </div>
     </div>
