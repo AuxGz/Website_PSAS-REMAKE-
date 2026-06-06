@@ -64,26 +64,18 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // If PAID → reduce stock & clear cart
-    if (newStatus === 'PAID') {
-      // Reduce stock for each product
+    // Stock was already deducted during checkout.
+    // If CANCELLED → restore the stock
+    if (newStatus === 'CANCELLED' && order.status !== 'CANCELLED') {
       for (const item of order.orderItems) {
         await prisma.product.update({
           where: { id: item.productId },
           data: {
-            stock: { decrement: item.quantity }
+            stock: { increment: item.quantity }
           }
         })
       }
-
-      // Clear the user's cart
-      await prisma.cartItem.deleteMany({
-        where: { profileId: order.profileId }
-      })
     }
-
-    // If CANCELLED → we could restore stock if needed (already deducted)
-    // For now, stock is only deducted on PAID
 
     return NextResponse.json({ status: 'ok' })
 

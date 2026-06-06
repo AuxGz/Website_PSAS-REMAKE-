@@ -89,6 +89,16 @@ export async function POST(request: NextRequest) {
       }
     })
     
+    // Deduct stock for each selected item
+    for (const item of itemsToProcess) {
+      await prisma.product.update({
+        where: { id: item.productId },
+        data: {
+          stock: { decrement: item.quantity }
+        }
+      })
+    }
+
     // Clear ONLY selected items from cart
     await prisma.cartItem.deleteMany({
       where: { 
