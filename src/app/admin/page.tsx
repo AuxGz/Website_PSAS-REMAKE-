@@ -119,6 +119,21 @@ export default async function AdminDashboard() {
               </div>
             </Card>
           </Link>
+
+          <Link href="/admin/analytics" className="group">
+            <Card className="h-full flex flex-col justify-between p-8 border-white/5 bg-primary/20 hover:bg-amber-500/5 hover:border-amber-500/20 transition-all duration-500">
+              <div className="space-y-4">
+                <div className="h-12 w-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18" /><path d="m19 9-5 5-4-4-3 3" /></svg>
+                </div>
+                <h3 className="text-2xl font-light italic">Transaction Analytics</h3>
+                <p className="text-zinc-500 text-sm font-light leading-relaxed">Visualize transaction volumes, track revenue trends, and monitor payment insights.</p>
+              </div>
+              <div className="mt-8 flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-bold text-amber-500 group-hover:translate-x-2 transition-transform">
+                View Analytics <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14m-7-7 7 7-7 7" /></svg>
+              </div>
+            </Card>
+          </Link>
         </div>
       </main>
 
