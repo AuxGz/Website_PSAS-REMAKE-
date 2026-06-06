@@ -27,6 +27,7 @@ model Profile {
   orders            Order[]
   cartItems         CartItem[]
   shippingAddresses ShippingAddress[]
+  reviews           Review[]
 
   @@map("profiles")
 }
@@ -69,6 +70,7 @@ model Product {
   category   Category       @relation(fields: [categoryId], references: [id])
   images     ProductImage[]
   cartItems  CartItem[]
+  reviews    Review[]
   orderItems OrderItem[]
 
   @@map("products")
@@ -177,4 +179,22 @@ model ShippingAddress {
   orders  Order[]
 
   @@map("shipping_addresses")
+}
+
+// ─── REVIEWS & RATINGS ───
+
+model Review {
+  id        String   @id @default(uuid()) @db.Uuid
+  profileId String   @db.Uuid @map("profile_id")
+  productId String   @db.Uuid @map("product_id")
+  rating    Int      // 1-5 stars
+  comment   String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, productId])
+  @@map("reviews")
 }
