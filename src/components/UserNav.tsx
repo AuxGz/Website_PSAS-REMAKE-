@@ -13,13 +13,15 @@ export default async function UserNav() {
   if (user) {
     const profile = await prisma.profile.findUnique({
       where: { userId: user.id },
-      select: { id: true, role: true }
+      select: { 
+        id: true, 
+        role: true,
+        _count: { select: { cartItems: true } }
+      }
     });
     if (profile) {
       isAdmin = profile.role === 'ADMIN';
-      cartCount = await prisma.cartItem.count({
-        where: { profileId: profile.id }
-      });
+      cartCount = profile._count.cartItems;
     }
   }
 

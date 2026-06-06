@@ -8,27 +8,40 @@ import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 import AddToCartButton from '@/components/AddToCartButton'
 
-// Caching aktif (60 detik)
-export const revalidate = 60; 
+import { unstable_cache } from 'next/cache';
+
+const getCachedProducts = unstable_cache(
+  async (selectedCategory?: string) => {
+    return prisma.product.findMany({
+      where: {
+        isActive: true,
+        ...(selectedCategory ? { category: { slug: selectedCategory } } : {})
+      },
+      include: {
+        category: true,
+        images: {
+          where: { type: 'THUMBNAIL' },
+          take: 1
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+  },
+  ['products-list'],
+  { revalidate: 60, tags: ['products'] }
+);
+
+const getCachedCategories = unstable_cache(
+  async () => prisma.category.findMany({ orderBy: { name: 'asc' } }),
+  ['categories-list'],
+  { revalidate: 300, tags: ['categories'] }
+);
 
 /**
  * KOMPONEN UNTUK AMBIL DATA PRODUK (DIPISAH AGAR BISA STREAMING)
  */
 async function ProductGrid({ selectedCategory }: { selectedCategory?: string }) {
-  const products = await prisma.product.findMany({
-    where: { 
-      isActive: true,
-      ...(selectedCategory ? { category: { slug: selectedCategory } } : {})
-    },
-    include: { 
-      category: true,
-      images: {
-        where: { type: 'THUMBNAIL' },
-        take: 1
-      }
-    },
-    orderBy: { createdAt: 'desc' }
-  });
+  const products = await getCachedProducts(selectedCategory);
 
   if (products.length === 0) {
     return (
@@ -50,10 +63,10 @@ async function ProductGrid({ selectedCategory }: { selectedCategory?: string }) 
         <Link href={`/products/${product.slug}`} key={product.id} className="group relative block">
           <div className="aspect-[4/5] w-full overflow-hidden rounded-3xl bg-primary/20 border border-white/5 transition-all group-hover:border-secondary/20 group-hover:bg-primary/40 relative">
             {product.images[0] ? (
-              <Image 
-                src={product.images[0].url} 
-                alt={product.name} 
-                fill 
+              <Image
+                src={product.images[0].url}
+                alt={product.name}
+                fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                 className="object-cover transition-transform duration-1000 group-hover:scale-110"
               />
@@ -64,7 +77,7 @@ async function ProductGrid({ selectedCategory }: { selectedCategory?: string }) 
                 </svg>
               </div>
             )}
-            
+
             {/* Quick Add Button */}
             <div className="absolute bottom-4 right-4 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 z-10">
               <AddToCartButton productId={product.id} />
@@ -83,20 +96,20 @@ async function ProductGrid({ selectedCategory }: { selectedCategory?: string }) 
 
 // Komponen terpisah untuk Category Bar agar tidak memblokir TTFB
 async function CategoryBar({ selectedCategory }: { selectedCategory?: string }) {
-  const categories = await prisma.category.findMany({ orderBy: { name: 'asc' } });
-  
+  const categories = await getCachedCategories();
+
   return (
     <div className="mb-10 flex gap-3 overflow-x-auto pb-4 no-scrollbar md:justify-center">
-      <Link 
-        href="/products" 
+      <Link
+        href="/products"
         className={`rounded-full px-6 py-2.5 text-sm font-medium transition-all ${!selectedCategory ? 'bg-secondary text-white' : 'border border-white/10 bg-primary/30'}`}
       >
         All Gear
       </Link>
       {categories.map((cat) => (
-        <Link 
-          key={cat.id} 
-          href={`/products?category=${encodeURIComponent(cat.slug)}`} 
+        <Link
+          key={cat.id}
+          href={`/products?category=${encodeURIComponent(cat.slug)}`}
           className={`rounded-full px-6 py-2.5 text-sm font-medium transition-all ${selectedCategory === cat.slug ? 'bg-secondary text-white' : 'border border-white/10 bg-primary/30'}`}
         >
           {cat.name}
@@ -142,14 +155,14 @@ export default async function ProductsPage({
         </div>
 
         {/* Categories & Products - Menggunakan KEY agar responsif saat diklik cepat */}
-        <Suspense 
+        <Suspense
           key={`categories-${selectedCategory}`}
           fallback={<div className="h-10 w-full animate-pulse bg-white/5 rounded-full mb-10" />}
         >
-           <CategoryBar selectedCategory={selectedCategory} />
+          <CategoryBar selectedCategory={selectedCategory} />
         </Suspense>
 
-        <Suspense 
+        <Suspense
           key={`products-${selectedCategory}`}
           fallback={
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

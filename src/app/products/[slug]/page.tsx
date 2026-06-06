@@ -1,5 +1,3 @@
-import { cookies } from 'next/headers'
-import { createClient } from '@/utils/supabase/server'
 import prisma from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
@@ -8,22 +6,28 @@ import AddToCartButton from '@/components/AddToCartButton'
 import UserNav from '@/components/UserNav'
 import { Suspense } from 'react'
 import ProductGallery from '@/components/ProductGallery'
+import { unstable_cache } from 'next/cache'
+
+const getCachedProduct = unstable_cache(
+  async (slug: string) => {
+    return prisma.product.findUnique({
+      where: { slug },
+      include: { 
+        category: true,
+        images: {
+          orderBy: { sortOrder: 'asc' }
+        }
+      }
+    });
+  },
+  ['product-detail'],
+  { revalidate: 60, tags: ['products'] }
+);
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const cookieStore = await cookies()
-  const supabase = createClient(cookieStore)
-  const { data: { user: authUser } } = await supabase.auth.getUser()
 
-  const product = await prisma.product.findUnique({
-    where: { slug: slug },
-    include: { 
-      category: true,
-      images: {
-        orderBy: { sortOrder: 'asc' }
-      }
-    }
-  })
+  const product = await getCachedProduct(slug);
 
   if (!product) {
     notFound()

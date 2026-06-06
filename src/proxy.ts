@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { updateSession } from "@/utils/supabase/middleware";
 
-export async function proxy(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   // Update session dan dapatkan response awal
   const { supabase, supabaseResponse } = updateSession(request);
 
