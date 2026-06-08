@@ -1,7 +1,6 @@
 import prisma from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import AddToCartButton from '@/components/AddToCartButton'
 import UserNav from '@/components/UserNav'
 import { Suspense } from 'react'
@@ -54,22 +53,25 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     if (user) {
       const profile = await prisma.profile.findUnique({
         where: { userId: user.id },
-        select: { id: true }
+        select: { 
+          id: true,
+          orders: {
+            where: {
+              status: { in: ['PAID', 'PROCESSING'] },
+              orderItems: {
+                some: {
+                  productId: product.id
+                }
+              }
+            },
+            take: 1,
+            select: { id: true }
+          }
+        }
       });
       if (profile) {
         currentProfileId = profile.id;
-        const purchase = await prisma.order.findFirst({
-          where: {
-            profileId: profile.id,
-            status: { in: ['PAID', 'PROCESSING'] },
-            orderItems: {
-              some: {
-                productId: product.id
-              }
-            }
-          }
-        });
-        hasPurchased = !!purchase;
+        hasPurchased = profile.orders.length > 0;
       }
     }
   } catch {}
