@@ -14,6 +14,7 @@ export default function GlobalLoading() {
             alt="SummitXGear Loading"
             width={180}
             height={60}
+            priority={true}
             className="brightness-0 invert opacity-80"
           />
         </div>

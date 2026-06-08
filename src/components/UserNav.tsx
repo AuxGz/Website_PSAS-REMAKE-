@@ -3,23 +3,38 @@ import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
 import MobileNavMenu from './MobileNavMenu';
+import { unstable_cache } from 'next/cache';
 
-export default async function UserNav() {
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
-  const { data: { user } } = await supabase.auth.getUser();
-
-  let isAdmin = false;
-  let cartCount = 0;
-  if (user) {
-    const profile = await prisma.profile.findUnique({
-      where: { userId: user.id },
+const getCachedProfile = unstable_cache(
+  async (userId: string) => {
+    return prisma.profile.findUnique({
+      where: { userId },
       select: { 
         id: true, 
         role: true,
         _count: { select: { cartItems: true } }
       }
     });
+  },
+  ['user-profile-nav'],
+  { revalidate: 30, tags: ['profile'] }
+);
+
+export default async function UserNav() {
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+  
+  console.time('UserNav-Supabase');
+  const { data: { user } } = await supabase.auth.getUser();
+  console.timeEnd('UserNav-Supabase');
+
+  let isAdmin = false;
+  let cartCount = 0;
+  if (user) {
+    console.time('UserNav-Prisma');
+    const profile = await getCachedProfile(user.id);
+    console.timeEnd('UserNav-Prisma');
+    
     if (profile) {
       isAdmin = profile.role === 'ADMIN';
       cartCount = profile._count.cartItems;

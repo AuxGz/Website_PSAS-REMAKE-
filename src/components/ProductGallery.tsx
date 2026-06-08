@@ -43,7 +43,7 @@ export default function ProductGallery({ images, productName, has360View }: Prop
             alt={productName} 
             fill 
             priority
-            sizes="(max-width: 1024px) 100vw, 50vw"
+            sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover transition-all duration-700 ease-in-out"
           />
         ) : (
@@ -87,7 +87,7 @@ export default function ProductGallery({ images, productName, has360View }: Prop
                     src={img.url} 
                     alt="Thumbnail" 
                     fill 
-                    sizes="150px"
+                    sizes="80px"
                     className={`object-cover transition-opacity duration-300 ${activeImage?.id === img.id ? 'opacity-100' : 'opacity-40 group-hover:opacity-100'}`} 
                   />
                 )}

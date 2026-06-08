@@ -10,7 +10,7 @@ export default function Footer() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 md:gap-12 mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-16 md:gap-12 mb-24">
           {/* Brand Identity */}
           <div className="space-y-8 lg:col-span-1">
             <Link href="/" className="inline-block">
@@ -26,35 +26,28 @@ export default function Footer() {
             <h4 className="text-xs tracking-[0.4em] uppercase text-zinc-300 font-bold">Experience</h4>
             <ul className="space-y-4 text-sm text-zinc-400 font-normal">
               <li><Link href="/products" className="hover:text-white transition-colors">Our Collection</Link></li>
-              <li><Link href="#craft" className="hover:text-white transition-colors">Craftsmanship</Link></li>
-              <li><Link href="/about" className="hover:text-white transition-colors">The SummitX Story</Link></li>
-              <li><Link href="/innovation" className="hover:text-white transition-colors">Innovation Lab</Link></li>
             </ul>
           </div>
 
-          {/* Bespoke Services */}
+          {/* Contact & Newsletter */}
           <div className="space-y-8">
-            <h4 className="text-xs tracking-[0.4em] uppercase text-zinc-300 font-bold">Bespoke</h4>
-            <ul className="space-y-4 text-sm text-zinc-400 font-normal">
-              <li><Link href="/custom" className="hover:text-white transition-colors">Custom Equipment</Link></li>
-              <li><Link href="/orders" className="hover:text-white transition-colors">Order Tracking</Link></li>
-              <li><Link href="/support" className="hover:text-white transition-colors">Client Support</Link></li>
-              <li><Link href="/contact" className="hover:text-white transition-colors">Private Inquiry</Link></li>
-            </ul>
-          </div>
-
-          {/* Social & Contact */}
-          <div className="space-y-8">
-            <h4 className="text-xs tracking-[0.4em] uppercase text-zinc-300 font-bold">Follow the Journey</h4>
-            <div className="flex gap-6">
-               <a href="#" className="text-zinc-500 hover:text-white transition-colors">
-                 <span className="text-[11px] tracking-[0.2em] uppercase font-bold">Instagram</span>
-               </a>
-               <a href="#" className="text-zinc-500 hover:text-white transition-colors">
-                 <span className="text-[11px] tracking-[0.2em] uppercase font-bold">YouTube</span>
-               </a>
+            <h4 className="text-xs tracking-[0.4em] uppercase text-zinc-300 font-bold">Reach Us</h4>
+            
+            <div className="text-sm text-zinc-400 font-normal leading-relaxed space-y-1">
+              <p>Jl. Raya Banyumas No. 1</p>
+              <p>Purwokerto, Jawa Tengah</p>
+              <p>Indonesia</p>
+              <div className="pt-4">
+                <a href="mailto:summitxgear@gmail.com" className="inline-flex items-center gap-2 hover:text-white transition-colors">
+                  <svg className="w-4 h-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  summitxgear@gmail.com
+                </a>
+              </div>
             </div>
-            <div className="pt-4 border-t border-white/5">
+
+            <div className="pt-6 border-t border-white/5">
               <p className="text-[11px] tracking-[0.2em] uppercase text-zinc-500">Newsletter</p>
               <div className="mt-4 flex gap-2">
                 <input 

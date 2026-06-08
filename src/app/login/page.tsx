@@ -139,13 +139,13 @@ export default async function LoginPage({
 
         <p className="text-center text-sm text-zinc-500">
           By continuing, you agree to our{" "}
-          <a href="#" className="text-zinc-300 underline underline-offset-4 hover:text-white">
+          <Link href="/terms" className="text-zinc-300 underline underline-offset-4 hover:text-white">
             Terms of Service
-          </a>{" "}
+          </Link>{" "}
           and{" "}
-          <a href="#" className="text-zinc-300 underline underline-offset-4 hover:text-white">
+          <Link href="/privacy" className="text-zinc-300 underline underline-offset-4 hover:text-white">
             Privacy Policy
-          </a>.
+          </Link>.
         </p>
       </div>
     </div>

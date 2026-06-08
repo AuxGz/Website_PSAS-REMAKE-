@@ -7,14 +7,24 @@ import { Suspense } from 'react'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 import AddToCartButton from '@/components/AddToCartButton'
+import ProductControls from '@/components/ProductControls'
 import { unstable_cache } from 'next/cache';
 
 const getCachedProducts = unstable_cache(
-  async (selectedCategory?: string) => {
-    return prisma.product.findMany({
+  async (selectedCategory?: string, q?: string, sort?: string) => {
+    let orderBy: any = { createdAt: 'desc' };
+    if (sort === 'price_asc') {
+      orderBy = { price: 'asc' };
+    } else if (sort === 'price_desc') {
+      orderBy = { price: 'desc' };
+    }
+
+    console.time('Products-Prisma');
+    const products = await prisma.product.findMany({
       where: {
         isActive: true,
-        ...(selectedCategory ? { category: { slug: selectedCategory } } : {})
+        ...(selectedCategory ? { category: { slug: selectedCategory } } : {}),
+        ...(q ? { name: { contains: q, mode: 'insensitive' } } : {})
       },
       include: {
         category: true,
@@ -23,8 +33,10 @@ const getCachedProducts = unstable_cache(
           take: 1
         }
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy
     });
+    console.timeEnd('Products-Prisma');
+    return products;
   },
   ['products-list'],
   { revalidate: 60, tags: ['products'] }
@@ -42,8 +54,8 @@ export const revalidate = 60;
 /**
  * KOMPONEN UNTUK AMBIL DATA PRODUK (DIPISAH AGAR BISA STREAMING)
  */
-async function ProductGrid({ selectedCategory }: { selectedCategory?: string }) {
-  const products = await getCachedProducts(selectedCategory);
+async function ProductGrid({ selectedCategory, q, sort }: { selectedCategory?: string, q?: string, sort?: string }) {
+  const products = await getCachedProducts(selectedCategory, q, sort);
 
   if (products.length === 0) {
     return (
@@ -69,7 +81,7 @@ async function ProductGrid({ selectedCategory }: { selectedCategory?: string }) 
                 src={product.images[0].url}
                 alt={product.name}
                 fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 className="object-cover transition-transform duration-1000 group-hover:scale-110"
               />
             ) : (
@@ -127,9 +139,9 @@ import UserNav from '@/components/UserNav'
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string }>
+  searchParams: Promise<{ category?: string, q?: string, sort?: string }>
 }) {
-  const { category: selectedCategory } = await searchParams;
+  const { category: selectedCategory, q, sort } = await searchParams;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -137,7 +149,7 @@ export default async function ProductsPage({
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-14 md:h-20 items-center justify-between">
             <Link href="/" className="group flex items-center justify-center transition-transform hover:scale-110">
-              <Image src="/icons/icons-120x40.jpg" alt="Logo" width={120} height={40} className="object-contain" />
+              <Image src="/icons/icons-120x40.jpg" alt="Logo" width={120} height={40} priority={true} className="object-contain" />
             </Link>
             <Suspense fallback={<div className="h-8 w-20 animate-pulse bg-white/5 rounded-full" />}>
               <UserNav />
@@ -162,8 +174,12 @@ export default async function ProductsPage({
           <CategoryBar selectedCategory={selectedCategory} />
         </Suspense>
 
+        <Suspense fallback={<div className="h-12 w-full animate-pulse bg-white/5 rounded-full mb-8" />}>
+          <ProductControls />
+        </Suspense>
+
         <Suspense
-          key={`products-${selectedCategory}`}
+          key={`products-${selectedCategory}-${q}-${sort}`}
           fallback={
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
@@ -176,7 +192,7 @@ export default async function ProductsPage({
             </div>
           }
         >
-          <ProductGrid selectedCategory={selectedCategory} />
+          <ProductGrid selectedCategory={selectedCategory} q={q} sort={sort} />
         </Suspense>
       </main>
     </div>
