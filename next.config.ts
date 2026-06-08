@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self' *.supabase.co *.midtrans.com app.sandbox.midtrans.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.supabase.co *.midtrans.com app.sandbox.midtrans.com https://ajax.googleapis.com; style-src 'self' 'unsafe-inline'; img-src * blob: data:; font-src 'self' data:; connect-src *; frame-src 'self' *.midtrans.com app.sandbox.midtrans.com;",
+            value: "default-src 'self' *.supabase.co *.midtrans.com app.sandbox.midtrans.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.supabase.co *.midtrans.com app.sandbox.midtrans.com https://ajax.googleapis.com; style-src 'self' 'unsafe-inline'; img-src * blob: data:; font-src 'self' data:; connect-src * blob: data:; frame-src 'self' *.midtrans.com app.sandbox.midtrans.com; worker-src 'self' blob:; child-src 'self' blob:;",
           },
           {
             key: 'X-Frame-Options',
