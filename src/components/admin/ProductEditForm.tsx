@@ -55,7 +55,7 @@ export default function ProductEditForm({ product, categories, updateAction }: P
         
         <div className="grid md:grid-cols-2 gap-8">
           <div className="space-y-2">
-            <label className="text-[10px] tracking-widest uppercase text-zinc-500 font-bold px-1">Product Name</label>
+            <label className="text-xs tracking-[0.15em] uppercase text-zinc-400 font-semibold px-1">Product Name</label>
             <input 
               name="name"
               defaultValue={product.name}
@@ -63,7 +63,7 @@ export default function ProductEditForm({ product, categories, updateAction }: P
             />
           </div>
           <div className="space-y-2">
-            <label className="text-[10px] tracking-widest uppercase text-zinc-500 font-bold px-1">Price (IDR)</label>
+            <label className="text-xs tracking-[0.15em] uppercase text-zinc-400 font-semibold px-1">Price (IDR)</label>
             <input 
               name="price"
               type="number"
@@ -75,7 +75,7 @@ export default function ProductEditForm({ product, categories, updateAction }: P
 
         <div className="grid md:grid-cols-2 gap-8">
           <div className="space-y-2">
-            <label className="text-[10px] tracking-widest uppercase text-zinc-500 font-bold px-1">Current Stock</label>
+            <label className="text-xs tracking-[0.15em] uppercase text-zinc-400 font-semibold px-1">Current Stock</label>
             <input 
               name="stock"
               type="number"
@@ -84,7 +84,7 @@ export default function ProductEditForm({ product, categories, updateAction }: P
             />
           </div>
           <div className="space-y-2">
-            <label className="text-[10px] tracking-widest uppercase text-zinc-500 font-bold px-1">Category</label>
+            <label className="text-xs tracking-[0.15em] uppercase text-zinc-400 font-semibold px-1">Category</label>
             <select 
               name="categoryId"
               defaultValue={product.categoryId}
@@ -100,7 +100,7 @@ export default function ProductEditForm({ product, categories, updateAction }: P
         </div>
 
         <div className="space-y-2">
-          <label className="text-[10px] tracking-widest uppercase text-zinc-500 font-bold px-1">Description</label>
+          <label className="text-xs tracking-[0.15em] uppercase text-zinc-400 font-semibold px-1">Description</label>
           <textarea 
             name="description"
             rows={4}

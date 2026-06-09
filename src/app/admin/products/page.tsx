@@ -43,14 +43,14 @@ export default async function AdminProductsPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
-            <Link href="/admin" className="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-zinc-500 hover:text-white transition-colors mb-4">
+            <Link href="/admin" className="flex items-center gap-2 text-xs tracking-[0.15em] uppercase font-semibold text-zinc-400 hover:text-white transition-colors mb-4">
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
               Dashboard
             </Link>
             <h1 className="text-3xl font-bold tracking-tight">Product Management</h1>
-            <p className="mt-2 text-zinc-500 text-sm font-light">Inventory control and product listings.</p>
+            <p className="mt-2 text-zinc-400 text-sm font-normal">Inventory control and product listings.</p>
           </div>
-          <Link href="/admin/products/new" className="h-14 px-8 rounded-2xl bg-secondary text-white text-[10px] tracking-[0.3em] uppercase font-bold flex items-center justify-center hover:bg-secondary/80 transition-all shadow-lg shadow-secondary/20">
+          <Link href="/admin/products/new" className="h-14 px-8 rounded-2xl bg-secondary text-white text-xs tracking-[0.2em] uppercase font-bold flex items-center justify-center hover:bg-secondary/80 transition-all shadow-lg shadow-secondary/20">
             Add New Gear
           </Link>
         </div>
@@ -58,7 +58,7 @@ export default async function AdminProductsPage() {
         <div className="overflow-hidden rounded-[2rem] border border-white/5 bg-primary/20 backdrop-blur-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-white/5 bg-white/5 text-[10px] tracking-[0.2em] uppercase text-zinc-500">
+              <thead className="border-b border-white/5 bg-white/5 text-xs tracking-[0.15em] uppercase font-semibold text-zinc-400">
                 <tr>
                   <th className="px-8 py-5 font-bold">Product</th>
                   <th className="px-8 py-5 font-bold">Category</th>
@@ -83,12 +83,12 @@ export default async function AdminProductsPage() {
                         </div>
                         <div>
                           <div className="font-medium text-foreground">{product.name}</div>
-                          <div className="text-xs text-zinc-500 font-light tracking-tight">{product.slug}</div>
+                          <div className="text-xs text-zinc-400 font-normal tracking-tight">{product.slug}</div>
                         </div>
                       </div>
                     </td>
                     <td className="px-8 py-6">
-                      <span className="px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-[10px] uppercase font-bold text-accent">
+                      <span className="px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-xs uppercase font-bold text-accent">
                         {product.category.name}
                       </span>
                     </td>
@@ -124,7 +124,7 @@ export default async function AdminProductsPage() {
           </div>
           {products.length === 0 && (
             <div className="py-20 text-center">
-              <p className="text-zinc-500 font-light italic">No products found in the collection.</p>
+              <p className="text-zinc-400 font-normal italic">No products found in the collection.</p>
             </div>
           )}
         </div>

@@ -140,9 +140,17 @@ export default async function AnalyticsPage(props: { searchParams: SearchParams 
             <Link href="/" className="group flex items-center justify-center transition-transform hover:scale-110">
               <span className="text-xl font-serif italic tracking-tighter">SummitXGear</span>
             </Link>
-            <Suspense fallback={<div className="h-8 w-20 animate-pulse bg-white/5 rounded-full" />}>
-              <UserNav />
-            </Suspense>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/"
+                className="text-xs tracking-[0.15em] uppercase font-bold border border-white/10 px-4 py-2 rounded-full text-zinc-300 hover:text-white hover:border-white/30 transition-all duration-500"
+              >
+                View Shop
+              </Link>
+              <Suspense fallback={<div className="h-8 w-20 animate-pulse bg-white/5 rounded-full" />}>
+                <UserNav />
+              </Suspense>
+            </div>
           </div>
         </div>
       </nav>
@@ -153,7 +161,7 @@ export default async function AnalyticsPage(props: { searchParams: SearchParams 
         <div className="mb-12 space-y-4">
           <Link
             href="/admin"
-            className="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-zinc-500 hover:text-white transition-colors"
+            className="flex items-center gap-2 text-xs tracking-[0.15em] uppercase font-semibold text-zinc-400 hover:text-white transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -170,10 +178,10 @@ export default async function AnalyticsPage(props: { searchParams: SearchParams 
             </svg>
             Dashboard
           </Link>
-          <h1 className="text-4xl md:text-6xl font-light italic tracking-tight">
-            Transaction <span className="font-serif">Analytics.</span>
+          <h1 className="text-4xl md:text-6xl font-medium tracking-tight">
+            Transaction <span className="font-serif italic">Analytics.</span>
           </h1>
-          <p className="text-[10px] tracking-[0.4em] uppercase text-zinc-500 font-bold">
+          <p className="text-xs tracking-[0.3em] uppercase text-zinc-400 font-semibold">
             Financial overview &amp; volume insights
           </p>
         </div>
@@ -189,7 +197,7 @@ export default async function AnalyticsPage(props: { searchParams: SearchParams 
 
       {/* ─── Footer ─── */}
       <footer className="mt-32 py-12 border-t border-white/5 text-center">
-        <p className="text-[9px] tracking-[0.4em] uppercase text-zinc-700">
+        <p className="text-xs tracking-[0.3em] uppercase text-zinc-600">
           SummitX Systems — Transaction Analytics
         </p>
       </footer>

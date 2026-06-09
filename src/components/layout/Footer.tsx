@@ -10,15 +10,28 @@ export default function Footer() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-16 md:gap-12 mb-24">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-16 md:gap-12 mb-24">
           {/* Brand Identity */}
-          <div className="space-y-8 lg:col-span-1">
+          <div className="space-y-8">
             <Link href="/" className="inline-block">
                <span className="text-2xl font-serif italic tracking-tighter text-white">SummitXGear</span>
             </Link>
             <p className="text-zinc-400 text-base font-normal leading-relaxed max-w-xs">
               Defined by excellence. Crafted for the extraordinary. We engineer equipment for those who refuse to settle for anything less than the pinnacle.
             </p>
+          </div>
+
+          {/* Categories Links */}
+          <div className="space-y-8">
+            <h4 className="text-xs tracking-[0.4em] uppercase text-zinc-300 font-bold">Categories</h4>
+            <ul className="space-y-4 text-sm text-zinc-400 font-normal">
+              <li><Link href="/products?category=backpacks-%26-bags" className="hover:text-white transition-colors">Backpacks & Bags</Link></li>
+              <li><Link href="/products?category=footwear" className="hover:text-white transition-colors">Footwear</Link></li>
+              <li><Link href="/products?category=tents-%26-shelter" className="hover:text-white transition-colors">Tents & Shelter</Link></li>
+              <li><Link href="/products?category=camping-equipment" className="hover:text-white transition-colors">Camping Equipment</Link></li>
+              <li><Link href="/products?category=apparel" className="hover:text-white transition-colors">Apparel</Link></li>
+              <li><Link href="/products?category=accessories" className="hover:text-white transition-colors">Accessories</Link></li>
+            </ul>
           </div>
 
           {/* Experience Links */}

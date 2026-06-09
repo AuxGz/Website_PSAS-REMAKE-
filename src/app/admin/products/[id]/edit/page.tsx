@@ -60,14 +60,14 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
         <div className="flex flex-col gap-4">
           <Link 
             href="/admin/products" 
-            className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-sm"
+            className="flex items-center gap-2 text-xs tracking-[0.15em] uppercase font-semibold text-zinc-400 hover:text-white transition-colors"
           >
             <ChevronLeft className="w-4 h-4" />
             Back to Products
           </Link>
           <div className="flex justify-between items-end">
-            <h1 className="text-4xl font-light italic tracking-tight">
-              Edit <span className="font-serif">{product.name}</span>
+            <h1 className="text-4xl font-semibold tracking-tight">
+              Edit <span className="font-serif italic">{product.name}</span>
             </h1>
           </div>
         </div>
@@ -86,8 +86,8 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
         {/* 2. MEDIA MANAGEMENT SECTION */}
         <div className="space-y-6 pt-6">
           <div className="flex flex-col border-l-2 border-secondary pl-6">
-            <h2 className="text-xl font-medium">Product Gallery</h2>
-            <p className="text-sm text-zinc-500">Enhance your product presentation with high-quality media.</p>
+            <h2 className="text-xl font-semibold">Product Gallery</h2>
+            <p className="text-sm text-zinc-400 font-normal">Enhance your product presentation with high-quality media.</p>
           </div>
           
           <ProductImageManager 

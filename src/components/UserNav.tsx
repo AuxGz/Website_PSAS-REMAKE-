@@ -24,16 +24,16 @@ export default async function UserNav() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
   
-  console.time('UserNav-Supabase');
+  const startSupa = Date.now();
   const { data: { user } } = await supabase.auth.getUser();
-  console.timeEnd('UserNav-Supabase');
+  console.log(`UserNav-Supabase: ${Date.now() - startSupa}ms`);
 
   let isAdmin = false;
   let cartCount = 0;
   if (user) {
-    console.time('UserNav-Prisma');
+    const startPrisma = Date.now();
     const profile = await getCachedProfile(user.id);
-    console.timeEnd('UserNav-Prisma');
+    console.log(`UserNav-Prisma: ${Date.now() - startPrisma}ms`);
     
     if (profile) {
       isAdmin = profile.role === 'ADMIN';

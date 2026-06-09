@@ -114,11 +114,11 @@ export default function ProductImageManager({ productId, initialImages }: Props)
     <div className="space-y-6 bg-zinc-900/50 p-6 rounded-2xl border border-white/5">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-lg font-medium text-white flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-white flex items-center gap-2">
             <ImageIcon className="w-5 h-5 text-secondary" />
             Media Gallery
           </h3>
-          <p className="text-xs text-zinc-500 mt-1">PNG, JPG, WebP akan dikompres otomatis. GLB/OBJ tidak dikompres.</p>
+          <p className="text-xs text-zinc-400 font-normal mt-1">PNG, JPG, WebP akan dikompres otomatis. GLB/OBJ tidak dikompres.</p>
         </div>
         
         <button 
@@ -147,7 +147,7 @@ export default function ProductImageManager({ productId, initialImages }: Props)
               {is3D ? (
                 <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-800 text-zinc-400">
                   <ImageIcon className="w-8 h-8 mb-2 opacity-20" />
-                  <span className="text-[10px] uppercase tracking-widest font-bold">3D Model</span>
+                  <span className="text-xs uppercase tracking-[0.15em] font-semibold text-zinc-400">3D Model</span>
                 </div>
               ) : (
                 <Image 

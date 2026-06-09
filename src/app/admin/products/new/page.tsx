@@ -62,7 +62,7 @@ export default async function NewProductPage() {
   return (
     <div className="min-h-screen bg-background text-foreground py-12">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <Link href="/admin/products" className="mb-8 inline-flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-zinc-500 hover:text-white transition-colors group">
+        <Link href="/admin/products" className="mb-8 inline-flex items-center gap-2 text-xs tracking-[0.15em] uppercase font-semibold text-zinc-400 hover:text-white transition-colors group">
           <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-1" />
           Back to Gear List
         </Link>

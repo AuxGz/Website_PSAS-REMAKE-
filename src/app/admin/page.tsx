@@ -38,38 +38,46 @@ export default async function AdminDashboard() {
             <Link href="/" className="group flex items-center justify-center transition-transform hover:scale-110">
                <span className="text-xl font-serif italic tracking-tighter">SummitXGear</span>
             </Link>
-            <Suspense fallback={<div className="h-8 w-20 animate-pulse bg-white/5 rounded-full" />}>
-              <UserNav />
-            </Suspense>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/"
+                className="text-[10px] tracking-[0.2em] uppercase font-bold border border-white/10 px-4 py-2 rounded-full text-zinc-400 hover:text-white hover:border-white/30 transition-all duration-500"
+              >
+                View Shop
+              </Link>
+              <Suspense fallback={<div className="h-8 w-20 animate-pulse bg-white/5 rounded-full" />}>
+                <UserNav />
+              </Suspense>
+            </div>
           </div>
         </div>
       </nav>
 
       <main className="mx-auto max-w-7xl px-6 py-12 md:py-20">
         <div className="mb-12 space-y-4">
-          <h1 className="text-4xl md:text-6xl font-light italic tracking-tight">Admin <span className="font-serif">Dashboard.</span></h1>
-          <p className="text-[10px] tracking-[0.4em] uppercase text-zinc-500 font-bold">Manage your outdoor luxury empire</p>
+          <h1 className="text-4xl md:text-6xl font-medium tracking-tight">Admin <span className="font-serif italic">Dashboard.</span></h1>
+          <p className="text-xs tracking-[0.3em] uppercase text-zinc-400 font-semibold">Manage your outdoor luxury empire</p>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           <Card className="flex flex-col justify-center space-y-2" hover={false}>
-            <h3 className="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold">Total Revenue</h3>
-            <p className="text-3xl font-light italic text-secondary">
+            <h3 className="text-xs tracking-[0.2em] uppercase text-zinc-400 font-semibold">Total Revenue</h3>
+            <p className="text-3xl font-semibold text-secondary">
               Rp {Number(totalRevenue._sum.totalAmount || 0).toLocaleString('id-ID')}
             </p>
           </Card>
           <Card className="flex flex-col justify-center space-y-2" hover={false}>
-            <h3 className="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold">Total Orders</h3>
-            <p className="text-3xl font-light italic">{orderCount}</p>
+            <h3 className="text-xs tracking-[0.2em] uppercase text-zinc-400 font-semibold">Total Orders</h3>
+            <p className="text-3xl font-semibold">{orderCount}</p>
           </Card>
           <Card className="flex flex-col justify-center space-y-2" hover={false}>
-            <h3 className="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold">Products</h3>
-            <p className="text-3xl font-light italic">{productCount}</p>
+            <h3 className="text-xs tracking-[0.2em] uppercase text-zinc-400 font-semibold">Products</h3>
+            <p className="text-3xl font-semibold">{productCount}</p>
           </Card>
           <Card className="flex flex-col justify-center space-y-2" hover={false}>
-            <h3 className="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold">Categories</h3>
-            <p className="text-3xl font-light italic">{categoryCount}</p>
+            <h3 className="text-xs tracking-[0.2em] uppercase text-zinc-400 font-semibold">Categories</h3>
+            <p className="text-3xl font-semibold">{categoryCount}</p>
           </Card>
         </div>
 
@@ -81,10 +89,10 @@ export default async function AdminDashboard() {
                 <div className="h-12 w-12 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 15h2m-1-1v2m-6 3h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z" /></svg>
                 </div>
-                <h3 className="text-2xl font-light italic">Product Management</h3>
-                <p className="text-zinc-500 text-sm font-light leading-relaxed">Create new gear, update pricing, manage stock levels, and upload 360° views.</p>
+                <h3 className="text-xl font-semibold">Product Management</h3>
+                <p className="text-zinc-400 text-sm font-normal leading-relaxed">Create new gear, update pricing, manage stock levels, and upload 360° views.</p>
               </div>
-              <div className="mt-8 flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-bold text-secondary group-hover:translate-x-2 transition-transform">
+              <div className="mt-8 flex items-center gap-2 text-xs tracking-[0.15em] uppercase font-bold text-secondary group-hover:translate-x-2 transition-transform">
                 Go to Products <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14m-7-7 7 7-7 7" /></svg>
               </div>
             </Card>
@@ -96,10 +104,10 @@ export default async function AdminDashboard() {
                 <div className="h-12 w-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                 </div>
-                <h3 className="text-2xl font-light italic">Category Organization</h3>
-                <p className="text-zinc-500 text-sm font-light leading-relaxed">Organize your catalog by creating and managing equipment categories.</p>
+                <h3 className="text-xl font-semibold">Category Organization</h3>
+                <p className="text-zinc-400 text-sm font-normal leading-relaxed">Organize your catalog by creating and managing equipment categories.</p>
               </div>
-              <div className="mt-8 flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-bold text-accent group-hover:translate-x-2 transition-transform">
+              <div className="mt-8 flex items-center gap-2 text-xs tracking-[0.15em] uppercase font-bold text-accent group-hover:translate-x-2 transition-transform">
                 Manage Categories <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14m-7-7 7 7-7 7" /></svg>
               </div>
             </Card>
@@ -111,10 +119,10 @@ export default async function AdminDashboard() {
                 <div className="h-12 w-12 rounded-2xl bg-yellow-500/10 flex items-center justify-center text-yellow-500">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
                 </div>
-                <h3 className="text-2xl font-light italic">Order Fulfillment</h3>
-                <p className="text-zinc-500 text-sm font-light leading-relaxed">Track customer orders, manage statuses, and oversee business transactions.</p>
+                <h3 className="text-xl font-semibold">Order Fulfillment</h3>
+                <p className="text-zinc-400 text-sm font-normal leading-relaxed">Track customer orders, manage statuses, and oversee business transactions.</p>
               </div>
-              <div className="mt-8 flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-bold text-yellow-500 group-hover:translate-x-2 transition-transform">
+              <div className="mt-8 flex items-center gap-2 text-xs tracking-[0.15em] uppercase font-bold text-yellow-500 group-hover:translate-x-2 transition-transform">
                 View Orders <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14m-7-7 7 7-7 7" /></svg>
               </div>
             </Card>
@@ -126,10 +134,10 @@ export default async function AdminDashboard() {
                 <div className="h-12 w-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18" /><path d="m19 9-5 5-4-4-3 3" /></svg>
                 </div>
-                <h3 className="text-2xl font-light italic">Transaction Analytics</h3>
-                <p className="text-zinc-500 text-sm font-light leading-relaxed">Visualize transaction volumes, track revenue trends, and monitor payment insights.</p>
+                <h3 className="text-xl font-semibold">Transaction Analytics</h3>
+                <p className="text-zinc-400 text-sm font-normal leading-relaxed">Visualize transaction volumes, track revenue trends, and monitor payment insights.</p>
               </div>
-              <div className="mt-8 flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-bold text-amber-500 group-hover:translate-x-2 transition-transform">
+              <div className="mt-8 flex items-center gap-2 text-xs tracking-[0.15em] uppercase font-bold text-amber-500 group-hover:translate-x-2 transition-transform">
                 View Analytics <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14m-7-7 7 7-7 7" /></svg>
               </div>
             </Card>
@@ -138,7 +146,7 @@ export default async function AdminDashboard() {
       </main>
 
       <footer className="mt-32 py-12 border-t border-white/5 text-center">
-        <p className="text-[9px] tracking-[0.4em] uppercase text-zinc-700">SummitX Systems — Administrative Authority</p>
+        <p className="text-xs tracking-[0.3em] uppercase text-zinc-600">SummitX Systems — Administrative Authority</p>
       </footer>
     </div>
   )

@@ -45,24 +45,24 @@ export default function ProductCreateForm({ categories, createAction }: Props) {
       </div>
 
       <div className="mb-10">
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Add New <span className="text-secondary italic">Gear.</span></h1>
-        <p className="mt-2 text-zinc-500 text-[10px] tracking-[0.4em] uppercase font-bold">Inscribe a new legend into the collection</p>
+        <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">Add New <span className="text-secondary italic">Gear.</span></h1>
+        <p className="mt-2 text-zinc-400 text-xs tracking-[0.3em] uppercase font-semibold">Inscribe a new legend into the collection</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-10 bg-zinc-900/30 p-8 rounded-[2.5rem] border border-white/5 relative overflow-hidden backdrop-blur-sm">
         {isSaving && (
           <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center transition-all">
             <Loader2 className="w-8 h-8 text-secondary animate-spin mb-4" />
-            <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-white">Forging New Gear...</span>
+            <span className="text-xs font-semibold tracking-[0.3em] uppercase text-white">Forging New Gear...</span>
           </div>
         )}
 
         {/* Basic Info */}
         <div className="space-y-6">
-          <h2 className="text-[10px] tracking-[0.3em] uppercase font-bold border-b border-white/5 pb-4 text-secondary/60">Basic Information</h2>
+          <h2 className="text-xs tracking-[0.2em] uppercase font-bold border-b border-white/5 pb-4 text-secondary">Basic Information</h2>
           <div className="grid gap-6 sm:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500 px-1">Product Name</label>
+              <label className="text-xs tracking-[0.15em] uppercase font-semibold text-zinc-400 px-1">Product Name</label>
               <input 
                 name="name" 
                 required 
@@ -72,7 +72,7 @@ export default function ProductCreateForm({ categories, createAction }: Props) {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500 px-1">Category</label>
+              <label className="text-xs tracking-[0.15em] uppercase font-semibold text-zinc-400 px-1">Category</label>
               <select 
                 name="categoryId" 
                 required 
@@ -85,7 +85,7 @@ export default function ProductCreateForm({ categories, createAction }: Props) {
             </div>
           </div>
           <div className="space-y-2">
-            <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500 px-1">Description</label>
+            <label className="text-xs tracking-[0.15em] uppercase font-semibold text-zinc-400 px-1">Description</label>
             <textarea 
               name="description" 
               required 
@@ -98,10 +98,10 @@ export default function ProductCreateForm({ categories, createAction }: Props) {
 
         {/* Pricing & Inventory */}
         <div className="space-y-6">
-          <h2 className="text-[10px] tracking-[0.3em] uppercase font-bold border-b border-white/5 pb-4 text-accent/60">Pricing & Inventory</h2>
+          <h2 className="text-xs tracking-[0.2em] uppercase font-bold border-b border-white/5 pb-4 text-accent">Pricing & Inventory</h2>
           <div className="grid gap-6 sm:grid-cols-3">
             <div className="space-y-2">
-              <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500 px-1">Price (IDR)</label>
+              <label className="text-xs tracking-[0.15em] uppercase font-semibold text-zinc-400 px-1">Price (IDR)</label>
               <input 
                 name="price" 
                 required 
@@ -111,7 +111,7 @@ export default function ProductCreateForm({ categories, createAction }: Props) {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500 px-1">Stock</label>
+              <label className="text-xs tracking-[0.15em] uppercase font-semibold text-zinc-400 px-1">Stock</label>
               <input 
                 name="stock" 
                 required 
@@ -121,7 +121,7 @@ export default function ProductCreateForm({ categories, createAction }: Props) {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500 px-1">Weight (g)</label>
+              <label className="text-xs tracking-[0.15em] uppercase font-semibold text-zinc-400 px-1">Weight (g)</label>
               <input 
                 name="weight" 
                 required 
@@ -135,14 +135,14 @@ export default function ProductCreateForm({ categories, createAction }: Props) {
 
         {/* Special Features */}
         <div className="space-y-6">
-          <h2 className="text-[10px] tracking-[0.3em] uppercase font-bold border-b border-white/5 pb-4 text-zinc-400">Special Features</h2>
+          <h2 className="text-xs tracking-[0.2em] uppercase font-bold border-b border-white/5 pb-4 text-zinc-300">Special Features</h2>
           <label className="flex items-center gap-3 cursor-pointer group w-fit">
             <input 
               name="has360View" 
               type="checkbox" 
               className="h-5 w-5 rounded-lg border-white/10 bg-white/5 text-secondary focus:ring-0 focus:ring-offset-0 transition-all checked:bg-secondary cursor-pointer" 
             />
-            <span className="text-[10px] tracking-[0.1em] uppercase font-bold text-zinc-500 group-hover:text-foreground transition-colors">Enable 360° Product View</span>
+            <span className="text-xs tracking-[0.1em] uppercase font-semibold text-zinc-400 group-hover:text-foreground transition-colors">Enable 360° Product View</span>
           </label>
         </div>
 

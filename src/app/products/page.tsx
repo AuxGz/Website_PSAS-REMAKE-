@@ -19,7 +19,7 @@ const getCachedProducts = unstable_cache(
       orderBy = { price: 'desc' };
     }
 
-    console.time('Products-Prisma');
+    const startTime = Date.now();
     const products = await prisma.product.findMany({
       where: {
         isActive: true,
@@ -35,7 +35,7 @@ const getCachedProducts = unstable_cache(
       },
       orderBy
     });
-    console.timeEnd('Products-Prisma');
+    console.log(`[Prisma] Products query took ${Date.now() - startTime}ms`);
     return products;
   },
   ['products-list'],
