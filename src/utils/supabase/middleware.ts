@@ -4,7 +4,7 @@ import { type NextRequest, NextResponse } from "next/server";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-export const updateSession = (request: NextRequest) => {
+export const updateSession = async (request: NextRequest) => {
   // Create an unmodified response
   let supabaseResponse = NextResponse.next({
     request: {
@@ -33,5 +33,15 @@ export const updateSession = (request: NextRequest) => {
     },
   );
 
-  return { supabase, supabaseResponse };
+  // Refresh token / verify user
+  let user = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch (error) {
+    // Ignore error, user will remain null and invalid session cookies will be cleaned up
+    console.error("Supabase middleware getUser error:", error);
+  }
+
+  return { supabase, supabaseResponse, user };
 };

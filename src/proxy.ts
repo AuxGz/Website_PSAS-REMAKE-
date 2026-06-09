@@ -2,8 +2,8 @@ import { type NextRequest, NextResponse } from "next/server";
 import { updateSession } from "@/utils/supabase/middleware";
 
 export default async function proxy(request: NextRequest) {
-  // Update session dan dapatkan response awal
-  const { supabase, supabaseResponse } = updateSession(request);
+  // Update session dan dapatkan response awal (serta refresh token jika perlu)
+  const { supabase, supabaseResponse, user } = await updateSession(request);
 
   const { pathname } = request.nextUrl;
 
@@ -15,10 +15,8 @@ export default async function proxy(request: NextRequest) {
     pathname.startsWith('/orders') ||
     pathname.startsWith('/cart');
 
-  // Hanya panggil getUser JIKA rutenya memang butuh login
+  // Hanya panggil redirect JIKA rutenya memang butuh login dan user tidak terautentikasi
   if (isProtectedRoute) {
-    const { data: { user } } = await supabase.auth.getUser();
-    
     if (!user) {
       const url = request.nextUrl.clone();
       url.pathname = "/login";
